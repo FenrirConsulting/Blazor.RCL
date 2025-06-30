@@ -1,0 +1,16 @@
+@typeparam TItem
+<div class="admin-data-table">
+    <MudTable Items="@Items" 
+              Dense="@Dense"
+              Hover="true" 
+              Bordered="true" 
+              Striped="true"
+              Loading="@Loading">
+        <HeaderContent>
+            @HeaderContent
+        </HeaderContent>
+        <RowTemplate>
+            @RowTemplate(context)
+        </RowTemplate>
+    </MudTable>
+</div> 

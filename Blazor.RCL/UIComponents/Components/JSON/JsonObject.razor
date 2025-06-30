@@ -1,0 +1,34 @@
+@using Newtonsoft.Json.Linq
+<div class="json-object">
+    <div class="object-properties">
+        @foreach (var property in Properties.ToList())
+        {
+            var currentProperty = property;
+            <div class="property-row">
+                <div class="property-name">
+                    <MudTextField @bind-Value="currentProperty.Name" 
+                                Immediate="true"
+                                OnBlur="@(() => HandlePropertyNameChanged(currentProperty))"
+                                Class="property-name-field" />
+                </div>
+                <div class="property-value">
+                    <JsonNode Value="@property.Value" 
+                             OnValueChanged="@((v) => HandlePropertyValueChanged(currentProperty.Name, v))" />
+                </div>
+                <div class="property-actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                 Size="Size.Small"
+                                 Color="Color.Error"
+                                 OnClick="@(() => RemoveProperty(currentProperty.Name))" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="add-property">
+        <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Size="Size.Small">
+            <MudMenuItem OnClick="@(() => AddProperty(JTokenType.String))">Add String</MudMenuItem>
+            <MudMenuItem OnClick="@(() => AddProperty(JTokenType.Object))">Add Object</MudMenuItem>
+            <MudMenuItem OnClick="@(() => AddProperty(JTokenType.Array))">Add Array</MudMenuItem>
+        </MudMenu>
+    </div>
+</div> 

@@ -1,0 +1,18 @@
+::deep .json-editor {
+    width: 100%;
+}
+
+::deep .json-editor .mud-paper {
+    background-color: var(--mud-palette-background);
+}
+
+::deep .editor-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    padding: 0 4px;
+}
+
+::deep .editor-toolbar .mud-button {
+    text-transform: none;
+} 

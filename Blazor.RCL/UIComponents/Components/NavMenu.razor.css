@@ -1,2 +1,33 @@
-﻿::deep body {
+﻿::deep .mud-drawer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+::deep .mud-drawer-header {
+    padding: 16px;
+}
+
+.nav-menu-component ::deep .mud-nav-link {
+    border-radius: 4px;
+    margin: 0 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-menu-component ::deep .mud-nav-link:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.nav-menu-component ::deep .mud-nav-link.active {
+    background-color: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+}
+
+.nav-menu-component ::deep .logo-container {
+    margin-top: auto;
+    padding: 16px;
+}
+
+.nav-menu-component ::deep .logo-image {
+    margin-bottom: 8px;
 }

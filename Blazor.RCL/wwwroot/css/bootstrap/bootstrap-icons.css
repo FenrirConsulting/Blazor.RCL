@@ -515,9 +515,9 @@ url("./fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47") format("wof
 .bi-diagram-2::before { content: "\f2ec"; }
 .bi-diagram-3-fill::before { content: "\f2ed"; }
 .bi-diagram-3::before { content: "\f2ee"; }
-.bi-diamond-fill::before { content: "\f2ef"; }
-.bi-diamond-half::before { content: "\f2f0"; }
-.bi-diamond::before { content: "\f2f1"; }
+.bi-dIdentityond-fill::before { content: "\f2ef"; }
+.bi-dIdentityond-half::before { content: "\f2f0"; }
+.bi-dIdentityond::before { content: "\f2f1"; }
 .bi-dice-1-fill::before { content: "\f2f2"; }
 .bi-dice-1::before { content: "\f2f3"; }
 .bi-dice-2-fill::before { content: "\f2f4"; }
@@ -584,8 +584,8 @@ url("./fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47") format("wof
 .bi-eraser::before { content: "\f331"; }
 .bi-exclamation-circle-fill::before { content: "\f332"; }
 .bi-exclamation-circle::before { content: "\f333"; }
-.bi-exclamation-diamond-fill::before { content: "\f334"; }
-.bi-exclamation-diamond::before { content: "\f335"; }
+.bi-exclamation-dIdentityond-fill::before { content: "\f334"; }
+.bi-exclamation-dIdentityond::before { content: "\f335"; }
 .bi-exclamation-octagon-fill::before { content: "\f336"; }
 .bi-exclamation-octagon::before { content: "\f337"; }
 .bi-exclamation-square-fill::before { content: "\f338"; }
@@ -1050,8 +1050,8 @@ url("./fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47") format("wof
 .bi-puzzle::before { content: "\f503"; }
 .bi-question-circle-fill::before { content: "\f504"; }
 .bi-question-circle::before { content: "\f505"; }
-.bi-question-diamond-fill::before { content: "\f506"; }
-.bi-question-diamond::before { content: "\f507"; }
+.bi-question-dIdentityond-fill::before { content: "\f506"; }
+.bi-question-dIdentityond::before { content: "\f507"; }
 .bi-question-octagon-fill::before { content: "\f508"; }
 .bi-question-octagon::before { content: "\f509"; }
 .bi-question-square-fill::before { content: "\f50a"; }
@@ -1199,8 +1199,8 @@ url("./fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47") format("wof
 .bi-subtract::before { content: "\f598"; }
 .bi-suit-club-fill::before { content: "\f599"; }
 .bi-suit-club::before { content: "\f59a"; }
-.bi-suit-diamond-fill::before { content: "\f59b"; }
-.bi-suit-diamond::before { content: "\f59c"; }
+.bi-suit-dIdentityond-fill::before { content: "\f59b"; }
+.bi-suit-dIdentityond::before { content: "\f59c"; }
 .bi-suit-heart-fill::before { content: "\f59d"; }
 .bi-suit-heart::before { content: "\f59e"; }
 .bi-suit-spade-fill::before { content: "\f59f"; }
@@ -1336,8 +1336,8 @@ url("./fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47") format("wof
 .bi-wrench::before { content: "\f621"; }
 .bi-x-circle-fill::before { content: "\f622"; }
 .bi-x-circle::before { content: "\f623"; }
-.bi-x-diamond-fill::before { content: "\f624"; }
-.bi-x-diamond::before { content: "\f625"; }
+.bi-x-dIdentityond-fill::before { content: "\f624"; }
+.bi-x-dIdentityond::before { content: "\f625"; }
 .bi-x-octagon-fill::before { content: "\f626"; }
 .bi-x-octagon::before { content: "\f627"; }
 .bi-x-square-fill::before { content: "\f628"; }

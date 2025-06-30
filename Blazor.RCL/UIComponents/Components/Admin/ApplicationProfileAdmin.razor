@@ -1,0 +1,384 @@
+@using Blazor.RCL.Domain.Entities.Notifications
+@using Blazor.RCL.Application.Models.Notifications
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="application-profile-admin-consolidated">
+    @if (IsLoading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="loading-progress" />
+    }
+
+    @if (_currentApplication != null)
+    {
+        <MudPaper Elevation="0" Class="mb-4">
+            <MudToolBar>
+                <MudText Typo="Typo.h6">@_currentApplication.ApplicationName Email Templates</MudText>
+                <MudSpacer />
+                <MudChip T="string" Icon="@Icons.Material.Filled.Email" Color="Color.Primary">
+                    @_emailTemplates.Count Templates
+                </MudChip>
+                <MudChip T="string" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success">
+                    @_emailTemplates.Count(t => t.IsActive) Active
+                </MudChip>
+            </MudToolBar>
+        </MudPaper>
+
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabPanel Text="Templates" Icon="@Icons.Material.Filled.Dashboard">
+                <MudGrid>
+                    <MudItem xs="12" Class="d-flex align-center mb-4">
+                        <MudTextField @bind-Value="_searchText" 
+                                    Label="Search templates" 
+                                    Variant="Variant.Outlined"
+                                    Adornment="Adornment.Start" 
+                                    AdornmentIcon="@Icons.Material.Filled.Search"
+                                    Class="flex-grow-1 mr-4" />
+                        <MudSelect T="AlertType?" @bind-Value="_filterAlertType" 
+                                 Label="Filter by Alert Type" 
+                                 Variant="Variant.Outlined"
+                                 Clearable="true"
+                                 Class="mr-4"
+                                 Style="min-width: 200px;">
+                            @foreach (AlertType alertType in Enum.GetValues(typeof(AlertType)))
+                            {
+                                <MudSelectItem T="AlertType?" Value="@alertType">@alertType.ToString()</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudSwitch T="bool" @bind-Checked="_showInactive" Label="Show Inactive" Color="Color.Primary" />
+                    </MudItem>
+                    
+                    @if (FilteredTemplates.Any() || !_showGallery)
+                    {
+                        <MudItem xs="12">
+                            <MudGrid>
+                                <MudItem xs="12" sm="6" md="4" lg="3">
+                                    <MudCard Class="template-card add-new-card">
+                                        <MudCardContent Class="d-flex flex-column align-center justify-center" Style="height: 200px;">
+                                            <MudMenu Icon="@Icons.Material.Filled.Add" 
+                                                     Size="Size.Large"
+                                                     IconStyle="font-size: 3rem;"
+                                                     Color="Color.Primary"
+                                                     AnchorOrigin="Origin.BottomCenter"
+                                                     TransformOrigin="Origin.TopCenter">
+                                                <MudMenuItem Icon="@Icons.Material.Filled.CreateNewFolder" OnClick="OpenTemplateDialog">
+                                                    Start from Scratch
+                                                </MudMenuItem>
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Dashboard" OnClick="ShowTemplateGallery">
+                                                    Use Starter Template
+                                                </MudMenuItem>
+                                            </MudMenu>
+                                            <MudText Typo="Typo.h6" Color="Color.Primary" Class="mt-2">Add New Template</MudText>
+                                        </MudCardContent>
+                                    </MudCard>
+                                </MudItem>
+                                
+                                @foreach (var template in FilteredTemplates)
+                                {
+                                    <MudItem xs="12" sm="6" md="4" lg="3">
+                                        <MudCard Class="@($"template-card {(template.IsActive ? "" : "inactive-template")}")">
+                                            <MudCardHeader>
+                                                <CardHeaderContent>
+                                                    <MudText Typo="Typo.h6" Class="text-truncate">@template.Name</MudText>
+                                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@template.TemplateKey</MudText>
+                                                </CardHeaderContent>
+                                                <CardHeaderActions>
+                                                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" AnchorOrigin="Origin.BottomRight">
+                                                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditTemplate(template))">Edit</MudMenuItem>
+                                                        <MudMenuItem Icon="@Icons.Material.Filled.Preview" OnClick="@(() => PreviewTemplate(template))">Preview</MudMenuItem>
+                                                        <MudMenuItem Icon="@Icons.Material.Filled.History" OnClick="@(() => ShowTemplateHistory(template))">History</MudMenuItem>
+                                                        <MudDivider />
+                                                        @if (template.IsActive)
+                                                        {
+                                                            <MudMenuItem Icon="@Icons.Material.Filled.ToggleOff" OnClick="@(() => HandleTemplateStatusChange(template))">Deactivate</MudMenuItem>
+                                                        }
+                                                        else
+                                                        {
+                                                            <MudMenuItem Icon="@Icons.Material.Filled.ToggleOn" OnClick="@(() => HandleTemplateStatusChange(template))">Activate</MudMenuItem>
+                                                        }
+                                                        <MudMenuItem Icon="@Icons.Material.Filled.ContentCopy" OnClick="@(() => CloneTemplate(template))">Duplicate</MudMenuItem>
+                                                        @* Delete functionality not available in current service
+                                                        <MudDivider />
+                                                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteTemplate(template))">Delete</MudMenuItem>
+                                                        *@
+                                                    </MudMenu>
+                                                </CardHeaderActions>
+                                            </MudCardHeader>
+                                            <MudCardContent>
+                                                <MudText Typo="Typo.body2" Class="mb-2">@(template.Description ?? "No description")</MudText>
+                                                <MudStack Row="true" Spacing="1">
+                                                    <MudChip T="string" Size="Size.Small" Color="@(template.IsActive ? Color.Success : Color.Default)">
+                                                        @(template.IsActive ? "Active" : "Inactive")
+                                                    </MudChip>
+                                                    @if (template.IsDefault)
+                                                    {
+                                                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Default</MudChip>
+                                                    }
+                                                </MudStack>
+                                            </MudCardContent>
+                                            <MudCardActions>
+                                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => EditTemplate(template))">Edit</MudButton>
+                                                <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="@(() => PreviewTemplate(template))">Preview</MudButton>
+                                            </MudCardActions>
+                                        </MudCard>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
+                    else
+                    {
+                        <MudItem xs="12">
+                            <MudPaper Elevation="0" Class="pa-8 text-center">
+                                <MudIcon Icon="@Icons.Material.Filled.Email" Style="font-size: 4rem;" Color="Color.Default" />
+                                <MudText Typo="Typo.h6" Class="mt-4">No templates found</MudText>
+                                <MudText Typo="Typo.body1" Color="Color.Secondary">Try adjusting your filters or create a new template</MudText>
+                                <MudStack Row="true" Justify="Justify.Center" Spacing="3" Class="mt-4">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CreateNewFolder" 
+                                             OnClick="OpenTemplateDialog">
+                                        Start from Scratch
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Dashboard" 
+                                             OnClick="ShowTemplateGallery">
+                                        Use Starter Template
+                                    </MudButton>
+                                </MudStack>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+                
+                @if (_showGallery)
+                {
+                    <MudDivider Class="my-6" />
+                    <MudText Typo="Typo.h5" Class="mb-4">
+                        <MudIcon Icon="@Icons.Material.Filled.AutoAwesome" Class="mr-2" />
+                        Starter Templates
+                    </MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-4">
+                        Choose from our professionally designed templates to get started quickly
+                    </MudText>
+                    
+                    @foreach (var category in StarterTemplates.GetCategories())
+                    {
+                        <MudText Typo="Typo.h6" Class="mt-4 mb-3">@category</MudText>
+                        <MudGrid>
+                            @foreach (var starterTemplate in StarterTemplates.GetTemplatesByCategory(category))
+                            {
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudCard Class="starter-template-card">
+                                        <MudCardHeader>
+                                            <CardHeaderAvatar>
+                                                <MudAvatar Color="@(Enum.Parse<Color>(starterTemplate.IconColor))" Size="Size.Large">
+                                                    <MudIcon Icon="@GetIconValue(starterTemplate.Icon)" />
+                                                </MudAvatar>
+                                            </CardHeaderAvatar>
+                                            <CardHeaderContent>
+                                                <MudText Typo="Typo.h6">@starterTemplate.Name</MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary">@starterTemplate.Key</MudText>
+                                            </CardHeaderContent>
+                                        </MudCardHeader>
+                                        <MudCardContent>
+                                            <MudText Typo="Typo.body2">@starterTemplate.Description</MudText>
+                                            <MudStack Row="true" Spacing="1" Class="mt-2">
+                                                @foreach (var alertType in starterTemplate.SupportedAlertTypes)
+                                                {
+                                                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">@alertType</MudChip>
+                                                }
+                                            </MudStack>
+                                        </MudCardContent>
+                                        <MudCardActions>
+                                            <MudButton Color="Color.Primary" Variant="Variant.Text" FullWidth="true" 
+                                                       OnClick="@(() => UseStarterTemplate(starterTemplate))">
+                                                Use This Template
+                                            </MudButton>
+                                        </MudCardActions>
+                                    </MudCard>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    }
+                    
+                    <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Close" 
+                             OnClick="HideTemplateGallery" Class="mt-4">
+                        Hide Gallery
+                    </MudButton>
+                }
+            </MudTabPanel>
+            
+            <MudTabPanel Text="Import Templates" Icon="@Icons.Material.Filled.Upload">
+                <MudGrid>
+                    <MudItem xs="12" lg="8">
+                        <MudPaper Elevation="2" Class="pa-4">
+                            <MudText Typo="Typo.h6" Class="mb-4">Import Templates</MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4" Color="Color.Secondary">
+                                Import email templates from a JSON file or paste JSON content directly. 
+                                This allows you to restore templates from backups or transfer templates between environments.
+                            </MudText>
+                            
+                            <MudFileUpload T="IBrowserFile" Accept=".json" OnFilesChanged="HandleFileSelected" Class="mb-4">
+                                <ButtonTemplate>
+                                    <MudButton HtmlTag="label"
+                                             Variant="Variant.Filled"
+                                             Color="Color.Primary"
+                                             StartIcon="@Icons.Material.Filled.CloudUpload"
+                                             FullWidth="true">
+                                        Upload JSON File
+                                    </MudButton>
+                                </ButtonTemplate>
+                            </MudFileUpload>
+                            
+                            <MudDivider Class="my-4" />
+                            
+                            <MudTextField @bind-Value="_importJson" 
+                                        Label="Or paste JSON content directly" 
+                                        Lines="12"
+                                        Variant="Variant.Outlined"
+                                        Class="mb-4"
+                                        HelperText="Paste the JSON content of templates to import" />
+                            
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+                                <MudSwitch T="bool" @bind-Checked="_overwriteExisting" Color="Color.Warning" />
+                                <MudText>Overwrite existing templates</MudText>
+                                <MudTooltip Text="If enabled, existing templates with the same key will be updated. Otherwise, they will be skipped.">
+                                    <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Color="Color.Primary" />
+                                </MudTooltip>
+                            </MudStack>
+                            
+                            <MudButton Variant="Variant.Filled" 
+                                     Color="Color.Primary" 
+                                     OnClick="ImportTemplates"
+                                     Disabled="@(string.IsNullOrWhiteSpace(_importJson))"
+                                     StartIcon="@Icons.Material.Filled.Upload"
+                                     FullWidth="true"
+                                     Size="Size.Large">
+                                Import Templates
+                            </MudButton>
+                        </MudPaper>
+                    </MudItem>
+                    
+                    <MudItem xs="12" lg="4">
+                        <MudPaper Elevation="1" Class="pa-4">
+                            <MudText Typo="Typo.h6" Class="mb-3">
+                                <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" />
+                                Import Guidelines
+                            </MudText>
+                            
+                            <MudAlert Severity="Severity.Info" Class="mb-3">
+                                <MudText Typo="Typo.body2">
+                                    <strong>JSON Format:</strong> Templates should be in an array format with the following structure:
+                                </MudText>
+                            </MudAlert>
+                            
+                            <MudPaper Elevation="0" Class="pa-3 mb-3" Style="background-color: var(--mud-palette-background-grey);">
+                                <pre style="margin: 0; font-size: 12px; overflow-x: auto;">
+[
+  {
+    "templateKey": "ALERT_001",
+    "name": "System Alert",
+    "description": "Standard system alert",
+    "subjectTemplate": "Alert: {{Title}}",
+    "htmlBodyTemplate": "&lt;p&gt;{{Content}}&lt;/p&gt;",
+    "textBodyTemplate": "{{Content}}",
+    "supportedAlertTypes": ["Warning", "Error"],
+    "isActive": true,
+    "isDefault": false
+  }
+]</pre>
+                            </MudPaper>
+                            
+                            <MudList T="string" Dense="true">
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                                    <MudText Typo="Typo.body2">Templates are validated before import</MudText>
+                                </MudListItem>
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.Update" IconColor="Color.Info">
+                                    <MudText Typo="Typo.body2">Existing templates can be updated or skipped</MudText>
+                                </MudListItem>
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.Backup" IconColor="Color.Primary">
+                                    <MudText Typo="Typo.body2">Import creates new template versions</MudText>
+                                </MudListItem>
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                    
+                    @if (_importResults.Any())
+                    {
+                        <MudItem xs="12">
+                            <MudPaper Elevation="2" Class="pa-4">
+                                <MudText Typo="Typo.h6" Class="mb-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="mr-2" />
+                                    Import Results
+                                </MudText>
+                                
+                                <MudStack Row="true" Class="mb-3">
+                                    <MudChip T="string" 
+                                           Color="Color.Success" 
+                                           Icon="@Icons.Material.Filled.CheckCircle">
+                                        @_importResults.Count(r => r.Success) Successful
+                                    </MudChip>
+                                    <MudChip T="string" 
+                                           Color="Color.Error" 
+                                           Icon="@Icons.Material.Filled.Error">
+                                        @_importResults.Count(r => !r.Success) Failed
+                                    </MudChip>
+                                </MudStack>
+                                
+                                <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true">
+                                    <thead>
+                                        <tr>
+                                            <th>Template</th>
+                                            <th>Status</th>
+                                            <th>Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var result in _importResults)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <MudText Typo="Typo.body2" Style="font-weight: 500;">
+                                                        @result.TemplateName
+                                                    </MudText>
+                                                </td>
+                                                <td>
+                                                    <MudChip T="string" Size="Size.Small" 
+                                                           Color="@(result.Success ? Color.Success : Color.Error)"
+                                                           Icon="@(result.Success ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Error)">
+                                                        @(result.Success ? "Success" : "Failed")
+                                                    </MudChip>
+                                                </td>
+                                                <td>
+                                                    <MudText Typo="Typo.body2" Color="@(result.Success ? Color.Success : Color.Error)">
+                                                        @result.Message
+                                                    </MudText>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </MudSimpleTable>
+                                
+                                <MudButton Variant="Variant.Text" 
+                                         Color="Color.Secondary" 
+                                         StartIcon="@Icons.Material.Filled.Clear"
+                                         OnClick="ClearImportResults"
+                                         Class="mt-3">
+                                    Clear Results
+                                </MudButton>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+    }
+    else
+    {
+        <MudPaper Elevation="2" Class="pa-8 text-center empty-state" Style="min-height: 600px; display: flex; align-items: center; justify-content: center;">
+            <div>
+                <MudIcon Icon="@Icons.Material.Filled.Error" Style="font-size: 4rem; color: var(--mud-palette-error);" />
+                <MudText Typo="Typo.h5" Class="mt-4" Color="Color.Error">Application Not Found</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Tertiary">Unable to load application profile. Please check your configuration.</MudText>
+            </div>
+        </MudPaper>
+    }
+
+</div>

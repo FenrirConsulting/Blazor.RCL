@@ -1,0 +1,9 @@
+<div class="json-value">
+    <MudTextField @bind-Value="_stringValue"
+                 Immediate="true"
+                 OnBlur="HandleValueChanged"
+                 Lines="@(_stringValue?.Contains('\n') == true ? 3 : 1)"
+                 Variant="Variant.Outlined"
+                 Class="@($"value-field {GetValueTypeClass()}")"
+                 Dense="true" />
+</div> 

@@ -29,6 +29,11 @@ namespace Blazor.RCL.Domain.Entities
         public string? Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the description of the remote script.
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the variables associated with the remote script.
         /// </summary>
         public string? Variables { get; set; }

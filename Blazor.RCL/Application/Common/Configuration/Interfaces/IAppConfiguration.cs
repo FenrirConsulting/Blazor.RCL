@@ -1,4 +1,7 @@
-﻿namespace Blazor.RCL.Application.Common.Configuration.Interfaces
+using System.Collections.Generic;
+using Blazor.RCL.Application.Models.Configuration;
+
+namespace Blazor.RCL.Application.Common.Configuration.Interfaces
 {
     /// <summary>
     /// Defines the contract for application configuration settings.
@@ -84,5 +87,31 @@
         /// </summary>
         double SessionTimeout { get; }
         #endregion
+
+        #region Email Configuration
+
+        /// <summary>
+        /// Gets the SMTP settings for email notifications.
+        /// </summary>
+        SmtpSettings? SmtpSettings { get; }
+
+        #endregion
+
+        #region Redis and Notifications
+
+        /// <summary>
+        /// Gets the Redis configuration settings. Null if Redis is not configured.
+        /// When null, the notification system falls back to polling mode.
+        /// </summary>
+        RedisSettings? RedisSettings { get; }
+
+        /// <summary>
+        /// Gets the notification system settings.
+        /// Controls polling intervals, timeouts, and other notification behaviors.
+        /// </summary>
+        NotificationSettings NotificationSettings { get; }
+
+        #endregion
+
     }
 }

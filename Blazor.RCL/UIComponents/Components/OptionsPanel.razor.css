@@ -1,0 +1,459 @@
+/* OptionsPanel.razor.css - Enhanced modern aesthetics */
+
+/* Options trigger button with icon */
+::deep .options-trigger {
+    background-color: var(--mud-palette-appbar-background);
+    color: var(--mud-palette-white);
+    margin: 0 4px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::deep .options-trigger:hover {
+    background-color: var(--mud-palette-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::deep .trigger-text {
+    font-size: 0.875rem;
+}
+
+/* Main panel container with modern styling */
+::deep .options-panel {
+    width: 320px;
+    max-width: 90vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--mud-palette-surface);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--mud-palette-lines-inputs);
+}
+
+/* Enhanced panel header with gradient */
+::deep .panel-header {
+    position: relative;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-darken) 100%);
+    color: white;
+    overflow: hidden;
+}
+
+::deep .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+::deep .header-decoration {
+    position: absolute;
+    top: -50%;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+::deep .header-icon,
+::deep .header-title {
+    color: white;
+}
+
+/* Enhanced user section */
+::deep .user-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-bottom: 1px solid var(--mud-palette-lines-inputs);
+    background: var(--mud-palette-background);
+}
+
+::deep .user-avatar-container {
+    position: relative;
+}
+
+::deep .user-avatar {
+    background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-darken) 100%);
+    color: white;
+    font-weight: 600;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::deep .online-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #4caf50;
+    border: 2px solid white;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+::deep .user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+::deep .user-name {
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+    margin-bottom: 4px;
+}
+
+::deep .user-email {
+    color: var(--mud-palette-text-secondary);
+}
+
+/* Enhanced guest section */
+::deep .guest-section {
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--mud-palette-lines-inputs);
+    background: var(--mud-palette-background);
+}
+
+::deep .guest-icon-container {
+    margin-bottom: 16px;
+}
+
+::deep .guest-icon {
+    color: var(--mud-palette-primary);
+    opacity: 0.7;
+}
+
+::deep .guest-title {
+    margin-bottom: 8px;
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .guest-subtitle {
+    color: var(--mud-palette-text-secondary);
+}
+
+/* Section dividers */
+::deep .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--mud-palette-lines-inputs) 50%, transparent 100%);
+    margin: 0 16px;
+}
+
+/* Enhanced roles section */
+::deep .roles-section {
+    padding: 16px;
+}
+
+::deep .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 12px;
+    margin: -8px -12px 8px -12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+::deep .section-header:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+::deep .section-header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+::deep .section-icon {
+    color: var(--mud-palette-primary);
+}
+
+::deep .section-title {
+    font-weight: 500;
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .expand-icon {
+    color: var(--mud-palette-text-secondary);
+    transition: transform 0.3s ease;
+}
+
+::deep .roles-section .section-header:hover .expand-icon {
+    transform: scale(1.1);
+}
+
+/* Roles list styling for MudCollapse */
+::deep .roles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+::deep .role-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--mud-palette-background-grey);
+    border-radius: 8px;
+    border: 1px solid var(--mud-palette-lines-inputs);
+    transition: all 0.2s ease;
+}
+
+::deep .role-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+::deep .role-icon {
+    color: var(--mud-palette-primary);
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+::deep .role-text {
+    flex: 1;
+    font-weight: 600;
+    color: var(--mud-palette-primary-darken);
+    letter-spacing: 0.025em;
+    text-transform: capitalize;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+::deep .role-item:hover .role-text {
+    color: var(--mud-palette-primary);
+    text-shadow: 0 0 8px rgba(var(--mud-palette-primary-rgb), 0.2);
+}
+
+/* Add subtle gradient text effect for roles */
+::deep .role-text::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-lighten) 100%);
+    transition: width 0.3s ease;
+}
+
+::deep .role-item:hover .role-text::after {
+    width: 100%;
+}
+
+/* Enhanced settings section */
+::deep .settings-section {
+    padding: 16px;
+}
+
+::deep .section-title-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--mud-palette-lines-inputs);
+}
+
+::deep .section-title-container .mud-icon-root {
+    color: var(--mud-palette-primary);
+}
+
+::deep .section-title-container .section-title {
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid var(--mud-palette-lines-inputs);
+    background: var(--mud-palette-background);
+    transition: all 0.2s ease;
+}
+
+::deep .setting-item:hover:not(.disabled) {
+    background-color: var(--mud-palette-action-default-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+::deep .setting-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+::deep .setting-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+::deep .setting-icon {
+    color: var(--mud-palette-primary);
+}
+
+::deep .setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+::deep .setting-title {
+    font-weight: 500;
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .setting-description {
+    color: var(--mud-palette-text-secondary);
+}
+
+::deep .setting-switch {
+    flex-shrink: 0;
+}
+
+::deep .coming-soon-chip {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Enhanced actions section */
+::deep .actions-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--mud-palette-background);
+}
+
+::deep .action-button {
+    height: 44px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+::deep .action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::deep .action-button.primary {
+    background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-darken) 100%);
+}
+
+::deep .action-button.secondary {
+    border: 2px solid var(--mud-palette-primary);
+}
+
+/* Dark theme enhancements */
+::deep .mud-theme-dark .options-panel {
+    background-color: var(--mud-palette-surface);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+::deep .mud-theme-dark .panel-header {
+    background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-darken) 100%);
+}
+
+::deep .mud-theme-dark .user-section,
+::deep .mud-theme-dark .guest-section,
+::deep .mud-theme-dark .actions-section {
+    background-color: var(--mud-palette-surface);
+}
+
+::deep .mud-theme-dark .setting-item:hover:not(.disabled) {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+::deep .mud-theme-dark .role-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+::deep .mud-theme-dark .role-text {
+    color: var(--mud-palette-primary-lighten);
+}
+
+::deep .mud-theme-dark .role-item:hover .role-text {
+    color: var(--mud-palette-primary);
+    text-shadow: 0 0 12px rgba(var(--mud-palette-primary-rgb), 0.4);
+}
+
+::deep .mud-theme-dark .setting-item {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Mobile responsive enhancements */
+@media (max-width: 600px) {
+    ::deep .options-panel {
+        width: 300px;
+    }
+    
+    ::deep .panel-header,
+    ::deep .user-section,
+    ::deep .guest-section,
+    ::deep .actions-section,
+    ::deep .roles-section,
+    ::deep .settings-section {
+        padding: 16px;
+    }
+    
+    ::deep .setting-item {
+        padding: 12px;
+    }
+    
+    ::deep .role-item {
+        padding: 10px;
+    }
+}
+
+/* Smooth scrollbar for roles list */
+::deep .roles-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+::deep .roles-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::deep .roles-list::-webkit-scrollbar-thumb {
+    background: var(--mud-palette-primary);
+    border-radius: 2px;
+}
+
+::deep .roles-list::-webkit-scrollbar-thumb:hover {
+    background: var(--mud-palette-primary-darken);
+}

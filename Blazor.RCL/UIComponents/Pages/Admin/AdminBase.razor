@@ -1,0 +1,50 @@
+@inherits BaseAdminComponent
+
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <div class="admin-base">
+            @if (IsLoading)
+            {
+                <div class="loading-container">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </div>
+            }
+            else if (HasError)
+            {
+                <MudAlert Severity="Severity.Error" Class="error-alert">
+                    @ErrorMessage
+                </MudAlert>
+            }
+            else
+            {
+                <MudPaper Class="admin-container" Elevation="@(DisableElevation ? 0 : 1)">
+                    <MudPaper Class="admin-header" Elevation="0">
+                        <MudText Typo="Typo.h5">@Title</MudText>
+                        <div class="header-content">
+                            @HeaderContent
+                        </div>
+                    </MudPaper>
+
+                    <MudDivider Class="my-4"/>
+
+                    <div class="admin-content">
+                        @ChildContent
+                    </div>
+
+                    @if (FooterContent != null)
+                    {
+                        <MudDivider Class="my-4"/>
+                        <div class="admin-footer">
+                            @FooterContent
+                        </div>
+                    }
+                </MudPaper>
+            }
+        </div>
+    </ChildContent>
+    <ErrorContent>
+        <MudAlert Severity="Severity.Error">
+            An error has occurred. Please try refreshing the page.
+        </MudAlert>
+    </ErrorContent>
+</ErrorBoundary>

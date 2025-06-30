@@ -1,0 +1,95 @@
+::deep .variable-code, 
+::deep .helper-code {
+    background-color: var(--mud-palette-background-grey);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: var(--mud-palette-primary);
+    font-weight: 600;
+}
+
+::deep .variables-table, 
+::deep .helpers-table {
+    font-size: 0.875rem;
+}
+
+::deep .variables-table th, 
+::deep .helpers-table th {
+    background-color: var(--mud-palette-background-grey);
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .variables-table td, 
+::deep .helpers-table td {
+    vertical-align: middle;
+    padding: 12px 16px;
+}
+
+::deep .variables-table tr:hover, 
+::deep .helpers-table tr:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+/* Improve disabled field readability */
+::deep .mud-input-control-input-container .mud-input.mud-disabled {
+    color: var(--mud-palette-text-primary) !important;
+    opacity: 0.9 !important;
+    font-weight: 500 !important;
+}
+
+::deep .mud-input-control-input-container .mud-input.mud-disabled::placeholder {
+    color: var(--mud-palette-text-primary) !important;
+    opacity: 0.8 !important;
+}
+
+/* Additional styling for disabled text fields */
+::deep .mud-input.mud-disabled {
+    background-color: var(--mud-palette-background-grey) !important;
+    border-color: var(--mud-palette-lines-default) !important;
+}
+
+/* Force disabled input text to be dark */
+::deep input:disabled,
+::deep input.mud-disabled,
+::deep .mud-disabled input {
+    color: var(--mud-palette-text-primary) !important;
+    -webkit-text-fill-color: var(--mud-palette-text-primary) !important;
+    opacity: 1 !important;
+}
+
+/* Disabled field label styling */
+::deep .mud-input-control.mud-disabled .mud-input-label {
+    color: var(--mud-palette-text-secondary) !important;
+    opacity: 0.9 !important;
+}
+
+/* Special styling for filled variant when disabled - better readability */
+::deep .mud-input-filled.mud-disabled {
+    background-color: var(--mud-palette-background-grey) !important;
+}
+
+::deep .mud-input-filled.mud-disabled input {
+    color: var(--mud-palette-text-primary) !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+    -webkit-text-fill-color: var(--mud-palette-text-primary) !important;
+}
+
+/* Target the actual input element more specifically */
+::deep .mud-textfield .mud-input-slot.mud-input-root-filled.mud-disabled input {
+    color: var(--mud-palette-text-primary) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--mud-palette-text-primary) !important;
+}
+
+/* Copy button styling - enhance MudBlazor defaults */
+::deep .copy-button {
+    transition: transform 0.2s ease-in-out;
+    min-width: 80px;
+}
+
+::deep .copy-button:hover {
+    transform: scale(1.05);
+}

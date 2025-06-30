@@ -33,12 +33,12 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
         #region Public Methods
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ServerHost>> GetAllAsync()
+        public async Task<IEnumerable<ServerHost>> GetAllAsync(CancellationToken token = default)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.Set<ServerHost>().ToListAsync();
+                using var context = await _contextFactory.CreateDbContextAsync(token);
+                return await context.Set<ServerHost>().ToListAsync(token);
             }
             catch (Exception ex)
             {
@@ -48,12 +48,19 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<ServerHost?> GetByIdAsync(int id)
+        /// <exception cref="ArgumentException">Thrown when the ID is invalid.</exception>
+        public async Task<ServerHost?> GetByIdAsync(int id, CancellationToken token = default)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.Set<ServerHost>().FindAsync(id);
+                // Validate ID parameter
+                if (id <= 0)
+                {
+                    throw new ArgumentException("ID must be a positive number.", nameof(id));
+                }
+                
+                using var context = await _contextFactory.CreateDbContextAsync(token);
+                return await context.Set<ServerHost>().FindAsync(new object[] { id }, token);
             }
             catch (Exception ex)
             {
@@ -63,13 +70,18 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task AddAsync(ServerHost serverHost)
+        /// <exception cref="ArgumentNullException">Thrown when the server host is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when required fields are missing or empty.</exception>
+        public async Task AddAsync(ServerHost serverHost, CancellationToken token = default)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                await context.Set<ServerHost>().AddAsync(serverHost);
-                await context.SaveChangesAsync();
+                // Validate server host parameter
+                ValidateServerHost(serverHost);
+                
+                using var context = await _contextFactory.CreateDbContextAsync(token);
+                await context.Set<ServerHost>().AddAsync(serverHost, token);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex)
             {
@@ -79,32 +91,50 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task UpdateAsync(ServerHost serverHost)
+        /// <exception cref="ArgumentNullException">Thrown when the server host is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when required fields are missing or empty.</exception>
+        public async Task UpdateAsync(ServerHost serverHost, CancellationToken token = default)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
+                // Validate server host parameter
+                ValidateServerHost(serverHost);
+                
+                // Ensure the ID is valid for an update operation
+                if (serverHost.Id <= 0)
+                {
+                    throw new ArgumentException("Server host ID must be a positive number for update operations.", nameof(serverHost));
+                }
+                
+                using var context = await _contextFactory.CreateDbContextAsync(token);
                 context.Set<ServerHost>().Update(serverHost);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error updating server host with ID {serverHost.Id}", ex);
+                _logger.LogError($"Error updating server host with ID {serverHost?.Id}", ex);
                 throw;
             }
         }
 
         /// <inheritdoc/>
-        public async Task RemoveAsync(int id)
+        /// <exception cref="ArgumentException">Thrown when the ID is invalid.</exception>
+        public async Task RemoveAsync(int id, CancellationToken token = default)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                var serverHost = await context.Set<ServerHost>().FindAsync(id);
+                // Validate ID parameter
+                if (id <= 0)
+                {
+                    throw new ArgumentException("ID must be a positive number.", nameof(id));
+                }
+                
+                using var context = await _contextFactory.CreateDbContextAsync(token);
+                var serverHost = await context.Set<ServerHost>().FindAsync(new object[] { id }, token);
                 if (serverHost != null)
                 {
                     context.Set<ServerHost>().Remove(serverHost);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(token);
                 }
             }
             catch (Exception ex)
@@ -114,6 +144,64 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
             }
         }
 
+        #endregion
+        
+        #region Private Methods
+        
+        /// <summary>
+        /// Validates that a ServerHost meets all requirements.
+        /// </summary>
+        /// <param name="serverHost">The server host to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the server host is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when required fields are missing or empty or exceed max length.</exception>
+        private void ValidateServerHost(ServerHost serverHost)
+        {
+            if (serverHost == null)
+            {
+                throw new ArgumentNullException(nameof(serverHost), "Server host cannot be null.");
+            }
+
+            // Validate Hostname field
+            if (string.IsNullOrWhiteSpace(serverHost.Hostname))
+            {
+                throw new ArgumentException("Hostname is required and cannot be empty.", nameof(serverHost));
+            }
+            if (serverHost.Hostname.Length > 100)
+            {
+                throw new ArgumentException("Hostname cannot exceed 100 characters.", nameof(serverHost));
+            }
+
+            // Validate Environment field
+            if (string.IsNullOrWhiteSpace(serverHost.Environment))
+            {
+                throw new ArgumentException("Environment is required and cannot be empty.", nameof(serverHost));
+            }
+            if (serverHost.Environment.Length > 50)
+            {
+                throw new ArgumentException("Environment cannot exceed 50 characters.", nameof(serverHost));
+            }
+
+            // Validate Name field
+            if (string.IsNullOrWhiteSpace(serverHost.Name))
+            {
+                throw new ArgumentException("Name is required and cannot be empty.", nameof(serverHost));
+            }
+            if (serverHost.Name.Length > 100)
+            {
+                throw new ArgumentException("Name cannot exceed 100 characters.", nameof(serverHost));
+            }
+
+            // Validate Role field
+            if (string.IsNullOrWhiteSpace(serverHost.Role))
+            {
+                throw new ArgumentException("Role is required and cannot be empty.", nameof(serverHost));
+            }
+            if (serverHost.Role.Length > 100)
+            {
+                throw new ArgumentException("Role cannot exceed 100 characters.", nameof(serverHost));
+            }
+        }
+        
         #endregion
     }
 }

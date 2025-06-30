@@ -56,5 +56,26 @@ namespace Blazor.RCL.Infrastructure.Services.Interfaces
         /// <param name="principal">The ClaimsPrincipal representing the user.</param>
         /// <param name="value">The additional settings JSON string to set.</param>
         Task SetAdditionalSettingsAsync(ClaimsPrincipal principal, string value);
+
+        /// <summary>
+        /// Gets user roles from UserSettings, updating from claims if needed.
+        /// </summary>
+        /// <param name="principal">The ClaimsPrincipal representing the user.</param>
+        /// <returns>List of role names the user belongs to.</returns>
+        Task<List<string>> GetUserRolesAsync(ClaimsPrincipal principal);
+
+        /// <summary>
+        /// Updates user roles from authentication claims.
+        /// </summary>
+        /// <param name="principal">The ClaimsPrincipal representing the user.</param>
+        /// <returns>Updated list of role names.</returns>
+        Task<List<string>> UpdateUserRolesFromClaimsAsync(ClaimsPrincipal principal);
+
+        /// <summary>
+        /// Gets user roles directly from stored settings without refresh.
+        /// </summary>
+        /// <param name="username">The username to get roles for.</param>
+        /// <returns>List of role names from storage.</returns>
+        Task<List<string>> GetStoredUserRolesAsync(string username);
     }
 }

@@ -1,0 +1,266 @@
+@using Blazor.RCL.Domain.Entities.Notifications
+@using Blazor.RCL.Application.Models.Notifications
+@using MudBlazor
+@using Microsoft.AspNetCore.Components
+
+@inherits ComponentBase
+
+<div>
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @(IsNew ? "Create New Template" : $"Edit Template: {Model.Name}")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
+            <MudTabPanel Text="Basic Info">
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="Model.TemplateKey" 
+                                    Label="Template Key" 
+                                    Required="true"
+                                    ReadOnly="@(!IsNew)"
+                                    HelperText="Unique identifier for this template" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="Model.Name" 
+                                    Label="Template Name" 
+                                    Required="true" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudSelect T="AlertType" Label="Supported Alert Types" 
+                                 MultiSelection="true" 
+                                 @bind-SelectedValues="Model.SupportedAlertTypes"
+                                 HelperText="Select which alert types can use this template">
+                            @foreach (AlertType alertType in Enum.GetValues(typeof(AlertType)))
+                            {
+                                <MudSelectItem T="AlertType" Value="@alertType">@alertType.ToString()</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="Model.Description" 
+                                    Label="Description" 
+                                    Lines="3"
+                                    HelperText="Brief description of this template's purpose" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudSwitch T="bool" @bind-Checked="Model.IsActive" 
+                                 Label="Active" 
+                                 Color="Color.Primary" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudSwitch T="bool" @bind-Checked="Model.IsDefault" 
+                                 Label="Default Template" 
+                                 Color="Color.Secondary" />
+                    </MudItem>
+                    @if (!IsNew)
+                    {
+                        <MudItem xs="12">
+                            <MudSwitch T="bool" @bind-Checked="Model.CreateNewVersion" 
+                                     Label="Create New Version" 
+                                     Color="Color.Info"
+                                     HelperText="Keep the current version and create a new one" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+            
+            <MudTabPanel Text="Email Content">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="Model.SubjectTemplate" 
+                                    Label="Subject Template" 
+                                    Required="true"
+                                    HelperText="Use {{variable}} syntax for dynamic content"
+                                    Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="Model.HtmlBodyTemplate" 
+                                    Label="HTML Body Template" 
+                                    Required="true"
+                                    Lines="15"
+                                    Variant="Variant.Outlined"
+                                    HelperText="HTML template with Handlebars syntax" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="Model.TextBodyTemplate" 
+                                    Label="Text Body Template" 
+                                    Required="true"
+                                    Lines="10"
+                                    Variant="Variant.Outlined"
+                                    HelperText="Plain text version of the email" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="Model.CustomStyles" 
+                                    Label="Custom CSS Styles" 
+                                    Lines="6"
+                                    Variant="Variant.Outlined"
+                                    HelperText="CSS will be injected into the HTML template <style> tag" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            
+            <MudTabPanel Text="Variables" Icon="@Icons.Material.Filled.Code">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudAlert Severity="Severity.Info" Class="mb-4">
+                            <MudText Typo="Typo.body2">
+                                <strong>Handlebars Syntax:</strong> Use double curly braces to insert variables: <code>{{variable}}</code>
+                            </MudText>
+                        </MudAlert>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudPaper Elevation="1" Class="pa-4">
+                            <MudText Typo="Typo.h6" Class="mb-3">
+                                <MudIcon Icon="@Icons.Material.Filled.DataObject" Class="mr-2" />
+                                Standard Variables
+                            </MudText>
+                            <div class="mt-4">
+                                <MudText Typo="Typo.h6" Class="mb-2">Available Variables</MudText>
+                                <MudText Typo="Typo.body2" Class="mb-3 text-muted">
+                                    Click on any variable to copy it to your clipboard
+                                </MudText>
+                                
+                                <MudTable Items="@AvailableVariables" Hover="true" Dense="true" Class="variables-table">
+                                    <HeaderContent>
+                                        <MudTh>Variable</MudTh>
+                                        <MudTh>Description</MudTh>
+                                        <MudTh Style="width: 100px;">Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd>
+                                            <span class="variable-code">{{@context.Key}}</span>
+                                        </MudTd>
+                                        <MudTd>@context.Value</MudTd>
+                                        <MudTd>
+                                            <MudButton Variant="Variant.Filled" 
+                                                     StartIcon="@Icons.Material.Filled.ContentCopy"
+                                                     Size="Size.Small" 
+                                                     Color="Color.Primary"
+                                                     Class="copy-button"
+                                                     OnClick="@(() => CopyVariable(context.Key))">
+                                                Copy
+                                            </MudButton>
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </div>
+                        </MudPaper>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudPaper Elevation="1" Class="pa-4">
+                            <MudText Typo="Typo.h6" Class="mb-3">
+                                <MudIcon Icon="@Icons.Material.Filled.Functions" Class="mr-2" />
+                                Handlebars Helpers
+                            </MudText>
+                            <div class="mt-6">
+                                <MudText Typo="Typo.h6" Class="mb-2">Template Helpers</MudText>
+                                <MudText Typo="Typo.body2" Class="mb-3 text-muted">
+                                    Useful Handlebars helpers for formatting data
+                                </MudText>
+                                
+                                <MudTable Items="@GetHelpers()" Hover="true" Dense="true" Class="helpers-table">
+                                    <HeaderContent>
+                                        <MudTh>Helper</MudTh>
+                                        <MudTh>Description</MudTh>
+                                        <MudTh>Example</MudTh>
+                                        <MudTh Style="width: 100px;">Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd>
+                                            <span class="helper-code">@context.Name</span>
+                                        </MudTd>
+                                        <MudTd>@context.Description</MudTd>
+                                        <MudTd>
+                                            <span class="variable-code">@context.Example</span>
+                                        </MudTd>
+                                        <MudTd>
+                                            <MudButton Variant="Variant.Filled" 
+                                                     StartIcon="@Icons.Material.Filled.ContentCopy"
+                                                     Size="Size.Small" 
+                                                     Color="Color.Primary"
+                                                     Class="copy-button"
+                                                     OnClick="@(() => CopyHelper(context.Example))">
+                                                Copy
+                                            </MudButton>
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </div>
+                        </MudPaper>
+                    </MudItem>
+                    
+                    <MudItem xs="12">
+                        <MudPaper Elevation="1" Class="pa-4">
+                            <MudText Typo="Typo.h6" Class="mb-3">
+                                <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Class="mr-2" />
+                                Quick Tips
+                            </MudText>
+                            <MudList T="string" Dense="true">
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.TipsAndUpdates" IconColor="Color.Info">
+                                    <MudText Typo="Typo.body2">Click the copy buttons to add variables/helpers to your clipboard</MudText>
+                                </MudListItem>
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.FormatQuote" IconColor="Color.Info">
+                                    <MudText Typo="Typo.body2">Variables are case-sensitive: <code>{{Title}}</code> ≠ <code>{{title}}</code></MudText>
+                                </MudListItem>
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.Html" IconColor="Color.Info">
+                                    <MudText Typo="Typo.body2">HTML templates support full HTML tags and CSS styling</MudText>
+                                </MudListItem>
+                                <MudListItem T="string" Icon="@Icons.Material.Filled.Preview" IconColor="Color.Info">
+                                    <MudText Typo="Typo.body2">Use the Preview tab to test your template with sample data</MudText>
+                                </MudListItem>
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            
+            <MudTabPanel Text="Preview">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" 
+                                 Color="Color.Primary" 
+                                 StartIcon="@Icons.Material.Filled.Preview"
+                                 OnClick="GeneratePreview"
+                                 Class="mb-4">
+                            Generate Preview
+                        </MudButton>
+                    </MudItem>
+                    @if (PreviewContent != null)
+                    {
+                        <MudItem xs="12">
+                            <MudPaper Elevation="1" Class="pa-4">
+                                <MudText Typo="Typo.subtitle1" Class="mb-2">Subject:</MudText>
+                                <MudText Class="mb-4">@PreviewContent.Subject</MudText>
+                                
+                                <MudTabs Elevation="0">
+                                    <MudTabPanel Text="HTML Preview">
+                                        <iframe srcdoc="@PreviewContent.HtmlBody" 
+                                              style="width: 100%; height: 400px; border: 1px solid #ccc; background: white;" />
+                                    </MudTabPanel>
+                                    <MudTabPanel Text="Text Preview">
+                                        <pre style="white-space: pre-wrap; font-family: monospace; padding: 16px; background: #f5f5f5; border-radius: 4px;">@PreviewContent.TextBody</pre>
+                                    </MudTabPanel>
+                                    <MudTabPanel Text="Raw HTML">
+                                        <pre style="white-space: pre-wrap; font-family: monospace; padding: 16px; background: #f5f5f5; border-radius: 4px; overflow-x: auto;">@PreviewContent.HtmlBody</pre>
+                                    </MudTabPanel>
+                                </MudTabs>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">
+            @(IsNew ? "Create Template" : "Save Changes")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+</div>

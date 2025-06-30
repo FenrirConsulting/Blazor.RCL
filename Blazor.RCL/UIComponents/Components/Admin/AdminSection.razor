@@ -1,0 +1,17 @@
+<div class="admin-section">
+    <MudPaper Class="pa-4" Elevation="@(Elevation ?? 0)">
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <div class="d-flex justify-space-between align-center mb-4">
+                <MudText Typo="Typo.h6">@Title</MudText>
+                @if (HeaderContent != null)
+                {
+                    <div class="d-flex gap-2">
+                        @HeaderContent
+                    </div>
+                }
+            </div>
+        }
+        @ChildContent
+    </MudPaper>
+</div> 

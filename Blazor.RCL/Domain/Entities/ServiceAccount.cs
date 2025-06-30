@@ -19,27 +19,27 @@ namespace Blazor.RCL.Domain.Entities
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string? SAM { get; set; }
+        public string SAM { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the domain of the service account.
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string? Domain { get; set; }
+        public string Domain { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the key type for the service account.
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string? KeyType { get; set; }
+        public string KeyType { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the key path for the service account.
         /// </summary>
         [Required]
         [MaxLength(100)]
-        public string? KeyPath { get; set; }
+        public string KeyPath { get; set; } = string.Empty;
     }
 }

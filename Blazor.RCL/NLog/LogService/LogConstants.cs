@@ -2,7 +2,7 @@
 {
     public static class LogConstants
     {
-        public static readonly string LogEventProperies = "requestitem|RequestItem,sourceid|SourceId,applicationnameid|applicationnameId,taskid|TaskId";
+        public static readonly string LogEventProperies = "requestitem|RequestItem,sourceid|SourceId,Automationid|AutomationId,taskid|TaskId";
 
         public static string AppStatusStarted { get { return "STARTED"; } }
         public static string AppStatusRunning { get { return "RUNNING"; } }

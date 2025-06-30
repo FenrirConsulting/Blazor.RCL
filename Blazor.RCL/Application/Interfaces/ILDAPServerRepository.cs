@@ -23,6 +23,7 @@ namespace Blazor.RCL.Application.Interfaces
         /// <param name="id">The ID of the LDAP server.</param>
         /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
         /// <returns>The LDAP server configuration, or null if not found.</returns>
+        /// <exception cref="System.ArgumentException">Thrown when the ID is invalid.</exception>
         Task<LDAPServer?> GetByIdAsync(long id, CancellationToken token = default);
 
         /// <summary>
@@ -30,6 +31,8 @@ namespace Blazor.RCL.Application.Interfaces
         /// </summary>
         /// <param name="server">The LDAP server configuration to add.</param>
         /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the server is null.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when required fields are missing, empty, or exceed maximum length.</exception>
         Task AddAsync(LDAPServer server, CancellationToken token = default);
 
         /// <summary>
@@ -37,6 +40,8 @@ namespace Blazor.RCL.Application.Interfaces
         /// </summary>
         /// <param name="server">The LDAP server configuration to update.</param>
         /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the server is null.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when required fields are missing, empty, exceed maximum length, or the ID is invalid.</exception>
         Task UpdateAsync(LDAPServer server, CancellationToken token = default);
 
         /// <summary>
@@ -44,6 +49,7 @@ namespace Blazor.RCL.Application.Interfaces
         /// </summary>
         /// <param name="id">The ID of the LDAP server configuration to remove.</param>
         /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
+        /// <exception cref="System.ArgumentException">Thrown when the ID is invalid.</exception>
         Task RemoveAsync(long id, CancellationToken token = default);
     }
 }

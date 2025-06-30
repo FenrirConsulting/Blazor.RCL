@@ -1,0 +1,239 @@
+/* Help Panel Container */
+.help-panel-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1300;
+}
+
+.help-panel-container.active {
+    pointer-events: auto; /* Changed to auto to allow clicks on the container */
+    background-color: rgba(0, 0, 0, 0.05); /* Very subtle background */
+}
+
+/* The panel itself */
+.help-panel {
+    position: fixed;
+    top: 0;
+    right: -40%; /* Start offscreen */
+    width: 40%;
+    height: 100vh;
+    background-color: var(--mud-palette-surface);
+    box-shadow: var(--mud-elevation-10);
+    transition: right 0.3s ease-in-out;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto; /* This ensures the panel captures clicks */
+    z-index: 1310;
+}
+
+.help-panel.open {
+    right: 0; /* Slide in */
+}
+
+.help-panel-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto; /* Ensure all content inside can receive events */
+    overflow: hidden; /* Prevent content from overflowing the panel */
+}
+
+/* Make sure mud elements inside the panel receive clicks */
+::deep .mud-button,
+::deep .mud-icon-button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 1320;
+}
+
+/* Document wrapper with scrolling */
+::deep .document-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.5rem;
+    background-color: var(--mud-palette-surface) !important;
+    pointer-events: auto; /* Ensure scrolling works */
+    position: relative; /* Make sure positioning context is established */
+    display: block; /* Ensure it displays as a block */
+    height: 100%; /* Take up full height */
+}
+
+::deep .document-content {
+    line-height: 1.7;
+    color: var(--mud-palette-text-primary);
+    width: 100%;
+    background-color: var(--mud-palette-surface);
+    padding: 1.5rem;
+    border-radius: var(--mud-default-borderradius);
+    box-shadow: var(--mud-elevation-2);
+    pointer-events: auto;
+    min-height: 100%; /* Ensure content can be scrolled */
+}
+
+::deep .mud-markdown-body {
+    font-family: var(--mud-typography-default-family);
+    font-size: 1rem;
+    pointer-events: auto;
+}
+
+::deep .mud-markdown-body h1 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: var(--mud-palette-primary);
+    font-size: 1.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+::deep .mud-markdown-body h2 {
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--mud-palette-primary-darken);
+    font-size: 1.4rem;
+}
+
+::deep .mud-markdown-body h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    color: var(--mud-palette-text-primary);
+    font-size: 1.2rem;
+}
+
+::deep .mud-markdown-body p {
+    margin-bottom: 1.2em;
+}
+
+::deep .mud-markdown-body ol, ::deep .mud-markdown-body ul {
+    padding-left: 1.8rem;
+    margin-bottom: 1.2em;
+}
+
+::deep .mud-markdown-body li {
+    margin-bottom: 0.5em;
+}
+
+::deep .mud-markdown-body code {
+    background-color: var(--mud-palette-background-grey);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--mud-palette-primary-darken);
+}
+
+::deep .mud-markdown-body pre {
+    background-color: var(--mud-palette-background-grey);
+    padding: 1.2em;
+    border-radius: var(--mud-default-borderradius);
+    overflow-x: auto;
+    margin-bottom: 1.5em;
+}
+
+::deep .mud-markdown-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    box-shadow: var(--mud-elevation-1);
+    border-radius: var(--mud-default-borderradius);
+    overflow: hidden;
+}
+
+::deep .mud-markdown-body table th, ::deep .mud-markdown-body table td {
+    border: 1px solid var(--mud-palette-lines-default);
+    padding: 0.6em;
+    text-align: left;
+}
+
+::deep .mud-markdown-body table th {
+    background-color: var(--mud-palette-background);
+    color: var(--mud-palette-primary-darken);
+    font-weight: 500;
+}
+
+::deep .mud-markdown-body table tr:nth-child(even) {
+    background-color: var(--mud-palette-background-grey);
+}
+
+::deep .mud-markdown-body blockquote {
+    border-left: 4px solid var(--mud-palette-primary);
+    padding: 0.8em 1.2em;
+    margin: 1.5em 0;
+    background-color: var(--mud-palette-background-grey);
+    border-radius: 0 var(--mud-default-borderradius) var(--mud-default-borderradius) 0;
+}
+
+::deep .mud-markdown-body hr {
+    margin: 1.5em 0;
+    border: 0;
+    height: 1px;
+    background-color: var(--mud-palette-lines-default);
+}
+
+::deep .mud-markdown-body a {
+    color: var(--mud-palette-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+::deep .mud-markdown-body a:hover {
+    text-decoration: underline;
+}
+
+::deep .mud-markdown-body strong {
+    font-weight: 600;
+}
+
+/* Scrollbar styling for Webkit browsers */
+::deep .document-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+::deep .document-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::deep .document-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--mud-palette-lines-default);
+    border-radius: 4px;
+}
+
+::deep .document-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: var(--mud-palette-primary-lighten);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .help-panel {
+        width: 80%;
+        right: -80%;
+    }
+    
+    ::deep .document-content {
+        padding: 1rem;
+    }
+    
+    ::deep .mud-markdown-body {
+        font-size: 0.9rem;
+    }
+    
+    ::deep .mud-markdown-body h1 {
+        font-size: 1.5rem;
+    }
+    
+    ::deep .mud-markdown-body h2 {
+        font-size: 1.3rem;
+    }
+    
+    ::deep .mud-markdown-body h3 {
+        font-size: 1.1rem;
+    }
+}

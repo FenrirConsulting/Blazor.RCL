@@ -35,6 +35,19 @@ namespace Blazor.RCL.Domain.Entities.Configuration
         /// </summary>
         public string? AdditionalSettings { get; set; }
 
+        /// <summary>
+        /// JSON array of user roles captured from authentication claims.
+        /// Used for role-based notification targeting.
+        /// </summary>
+        [MaxLength(2000)]
+        public string? Roles { get; set; }
+
+        /// <summary>
+        /// Timestamp of when roles were last updated from authentication claims.
+        /// Used to determine if roles need to be refreshed.
+        /// </summary>
+        public DateTime? RolesLastUpdated { get; set; }
+
         #endregion
     }
 }

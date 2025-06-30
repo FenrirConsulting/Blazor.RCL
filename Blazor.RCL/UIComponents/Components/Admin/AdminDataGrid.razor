@@ -1,0 +1,12 @@
+@typeparam TItem
+
+<div class="admin-data-grid">
+    <MudDataGrid T="TItem" 
+                 Items="@Items"
+                 Dense="@Dense"
+                 Hover="true"
+                 Striped="true"
+                 Loading="@Loading">
+        @ChildContent
+    </MudDataGrid>
+</div> 

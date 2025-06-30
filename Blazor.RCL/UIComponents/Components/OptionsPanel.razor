@@ -1,0 +1,155 @@
+@* OptionsPanel.razor - Enhanced with improved aesthetics *@
+@using Blazor.RCL.UIComponents.Components
+@using MudBlazor
+
+<div>
+<MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Class="options-menu">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Text" Class="options-trigger">
+            <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Small" />
+            <MudText Class="trigger-text">Options</MudText>
+        </MudButton>
+    </ActivatorContent>
+    <ChildContent>
+        <div class="options-panel">
+            @* Header with gradient background *@
+            <div class="panel-header">
+                <div class="header-content">
+                    <MudIcon Icon="@Icons.Material.Filled.ManageAccounts" Class="header-icon" />
+                    <MudText Typo="Typo.h6" Class="header-title">Account</MudText>
+                </div>
+                <div class="header-decoration"></div>
+            </div>
+
+            @* User Info with enhanced styling *@
+            @if (IsAuthenticated)
+            {
+                <div class="user-section">
+                    <div class="user-avatar-container">
+                        <MudAvatar Size="Size.Large" Class="user-avatar">
+                            @GetUserInitials()
+                        </MudAvatar>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <div class="user-info">
+                        <MudText Typo="Typo.subtitle1" Class="user-name">@UserDisplayName</MudText>
+                        @if (!string.IsNullOrEmpty(UserEmail))
+                        {
+                            <MudText Typo="Typo.body2" Class="user-email">@UserEmail</MudText>
+                        }
+                    </div>
+                </div>
+
+                @* Enhanced Roles Section *@
+                @if (UserRoles.Any())
+                {
+                    <div class="section-divider"></div>
+                    <div class="roles-section">
+                        <div class="section-header" @onclick="ToggleRolesExpanded">
+                            <div class="section-header-content">
+                                <MudIcon Icon="@Icons.Material.Filled.Shield" Size="Size.Small" Class="section-icon" />
+                                <MudText Typo="Typo.body2" Class="section-title">@UserRoles.Count Role(s)</MudText>
+                            </div>
+                            <MudIcon Icon="@(RolesExpanded ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" 
+                                     Size="Size.Small" Class="expand-icon" />
+                        </div>
+                        <MudCollapse Expanded="RolesExpanded">
+                            <div class="roles-list">
+                                @foreach (var role in UserRoles)
+                                {
+                                    <div class="role-item">
+                                        <MudIcon Icon="@GetRoleIcon(role)" Class="role-icon" />
+                                        <MudText Typo="Typo.button" Class="role-text">@role</MudText>
+                                    </div>
+                                }
+                            </div>
+                        </MudCollapse>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="guest-section">
+                    <div class="guest-icon-container">
+                        <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Large" Class="guest-icon" />
+                    </div>
+                    <MudText Typo="Typo.h6" Class="guest-title">Guest User</MudText>
+                    <MudText Typo="Typo.body2" Class="guest-subtitle">Sign in to access all features</MudText>
+                </div>
+            }
+
+            @* Enhanced Settings Section *@
+            <div class="section-divider"></div>
+            <div class="settings-section">
+                <div class="section-title-container">
+                    <MudIcon Icon="@Icons.Material.Filled.Settings" Size="Size.Small" />
+                    <MudText Typo="Typo.body2" Class="section-title">Preferences</MudText>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-content">
+                        <MudIcon Icon="@Icons.Material.Filled.Brightness4" Class="setting-icon" />
+                        <div class="setting-info">
+                            <MudText Typo="Typo.body2" Class="setting-title">Dark Mode</MudText>
+                            <MudText Typo="Typo.caption" Class="setting-description">Toggle theme appearance</MudText>
+                        </div>
+                    </div>
+                    <MudSwitch T="bool" 
+                              Value="@(!_ThemeService.IsLightMode)" 
+                              ValueChanged="@((bool value) => ToggleTheme())" 
+                              Color="Color.Primary" 
+                              Class="setting-switch" />
+                </div>
+                
+                <div class="setting-item disabled">
+                    <div class="setting-content">
+                        <MudIcon Icon="@Icons.Material.Filled.Notifications" Class="setting-icon" />
+                        <div class="setting-info">
+                            <MudText Typo="Typo.body2" Class="setting-title">Notifications</MudText>
+                            <MudText Typo="Typo.caption" Class="setting-description">Manage notification preferences</MudText>
+                        </div>
+                    </div>
+                    <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Color="Color.Info" Class="coming-soon-chip">
+                        Coming Soon
+                    </MudChip>
+                </div>
+            </div>
+
+            @* Enhanced Actions Section *@
+            <div class="section-divider"></div>
+            <div class="actions-section">
+                @if (IsAuthenticated)
+                {
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.Login"
+                               Class="action-button secondary"
+                               Href="@($"{_AppConfiguration.BaseUrl}account/login")">
+                        Login
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Error"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.Logout"
+                               Class="action-button primary"
+                               OnClick="Logout">
+                        Reset Authentication
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.Login"
+                               Class="action-button primary"
+                               Href="@($"{_AppConfiguration.BaseUrl}account/login")">
+                        Sign In
+                    </MudButton>
+                }
+            </div>
+        </div>
+    </ChildContent>
+</MudMenu>
+</div>

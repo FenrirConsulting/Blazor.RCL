@@ -1,28 +1,36 @@
 ﻿@inherits LayoutComponentBase
+@using Blazor.RCL.UIComponents.Components
 
+<div class="main-layout-container">
 @* Loading Indicator *@
 @if (_isLoading)
 {
     <MudProgressCircular Indeterminate="true" Size="Size.Large" Class="mud-theme-primary mx-auto d-block mt-5" />
 }
+
 else
 {
-    @* Main Layout *@
-    <MudLayout>
-        @* Application Bar *@
-        <AppBar OnSidebarToggled="ToggleSidebar" />
+    @* Help System Wrapper *@
+    <HelpSystem HelpDocument="@_helpDocumentInfo">
+        @* Main Layout *@
+        <MudLayout Class="main-layout">
+            @* Application Bar *@
+            <AppBar OnSidebarToggled="ToggleSidebar" />
 
-        @* Navigation Menu *@
-        <NavMenu SideBarOpen="_sideBarOpen"></NavMenu>
+            @* Navigation Menu *@
+            <NavMenu SideBarOpen="_sideBarOpen"></NavMenu>
 
-        @* Main Content Area *@
-        <MudMainContent Class="row content mudblazor-main-content flex-grow-1 d-flex mt-2" Style="height: 100%;">
-            @Body
-        </MudMainContent>
-    </MudLayout>
+            @* Main Content Area *@
+            <MudMainContent Class="main-content">
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </HelpSystem>
 
     @* MudBlazor Providers *@
     <MudThemeProvider Theme="@(_themeService?.CurrentTheme)" />
     <MudDialogProvider />
     <MudSnackbarProvider />
+    <MudPopoverProvider />
 }
+</div>

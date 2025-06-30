@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Blazor.RCL.Infrastructure.Services.Interfaces;
 using Blazor.RCL.NLog.LogService.Interface;
@@ -55,15 +55,43 @@ namespace Blazor.RCL.Infrastructure.Services
 
             foreach (var propertyName in propertyNames)
             {
-                string keyPath = _configuration[$"RegistryConfiguration:{propertyName}"]!;
+                string keyPath = _configuration[$"RegistryConfiguration:{propertyName}"];
                 if (!string.IsNullOrEmpty(keyPath))
                 {
-                    var value = GetRegistryValue(keyPath);
-                    registryValues.Add(propertyName, value);
+                    try
+                    {
+                        using (var key = Registry.CurrentUser.OpenSubKey(keyPath))
+                        {
+                            if (key != null)
+                            {
+                                var value = key.GetValue(null) as string;
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    registryValues.Add(propertyName, value);
+                                }
+                                else
+                                {
+                                    _logger.LogMessage($"Value not found in Registry for {propertyName}: {keyPath}");
+                                    registryValues.Add(propertyName, string.Empty);
+                                }
+                            }
+                            else
+                            {
+                                _logger.LogMessage($"Registry key not found for {propertyName}: {keyPath}");
+                                registryValues.Add(propertyName, string.Empty);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error retrieving registry value for {propertyName} from {keyPath}", ex);
+                        registryValues.Add(propertyName, string.Empty);
+                    }
                 }
                 else
                 {
                     _logger.LogMessage($"Registry path for {propertyName} is not configured. Skipping.");
+                    registryValues.Add(propertyName, string.Empty);
                 }
             }
 
@@ -99,12 +127,64 @@ namespace Blazor.RCL.Infrastructure.Services
                 }
 
                 _logger.LogMessage($"Value not found in Registry: {keyPath}");
-                return string.Empty;
+                throw new Exception($"Value not found in Registry: {keyPath}");
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetRegistryValue", ex);
+                _logger.LogError($"Error retrieving registry value from {keyPath}", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a password from the registry based on the provided key path.
+        /// Ensures secure handling of sensitive credential information.
+        /// </summary>
+        /// <param name="keyPath">Registry key path where the password is stored.</param>
+        /// <returns>The password as a string, or empty string if not found.</returns>
+        public string GetPassword(string keyPath)
+        {
+            if (string.IsNullOrEmpty(keyPath))
+            {
+                _logger.LogWarn("Password registry path is not configured.");
                 return string.Empty;
+            }
+
+            try
+            {
+                // First try HKEY_LOCAL_MACHINE
+                using (var key = Registry.LocalMachine.OpenSubKey(keyPath))
+                {
+                    if (key != null)
+                    {
+                        var value = key.GetValue(null) as string;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            return value;
+                        }
+                    }
+                }
+
+                // If not found in HKLM, try HKEY_CURRENT_USER
+                using (var key = Registry.CurrentUser.OpenSubKey(keyPath))
+                {
+                    if (key != null)
+                    {
+                        var value = key.GetValue(null) as string;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            return value;
+                        }
+                    }
+                }
+
+                _logger.LogWarn($"Password not found in Registry: {keyPath}");
+                return string.Empty; // Return empty string instead of throwing exception
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving password from registry path {keyPath}", ex);
+                return string.Empty; // Return empty string instead of throwing exception
             }
         }
 

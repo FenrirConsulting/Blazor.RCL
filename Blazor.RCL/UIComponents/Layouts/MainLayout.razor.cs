@@ -5,6 +5,8 @@ using Blazor.RCL.Infrastructure.Themes;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Blazor.RCL.NLog.LogService.Interface;
+using Blazor.RCL.UIComponents.Components;
+using Blazor.RCL.Application.Interfaces;
 
 namespace Blazor.RCL.UIComponents.Layouts
 {
@@ -23,11 +25,23 @@ namespace Blazor.RCL.UIComponents.Layouts
         /// Service for logging.
         /// </summary>
         [Inject] private ILogHelper _logger { get; set; } = default!;
+
+        /// <summary>
+        /// Application configuration service.
+        /// </summary>
+        [Inject] private IAppConfiguration _appConfiguration { get; set; } = default!;
+
+        /// <summary>
+        /// Repository for tools configuration.
+        /// </summary>
+        [Inject] private IToolsConfigurationRepository _toolsRepository { get; set; } = default!;
         #endregion
 
         #region Private Fields
         private bool _sideBarOpen = true;
         private bool _isLoading = true; // Loading flag
+        private HelpDocumentInfo _helpDocumentInfo = new HelpDocumentInfo();
+        private bool _disposed = false;
         #endregion
 
         #region Private Methods
@@ -35,7 +49,6 @@ namespace Blazor.RCL.UIComponents.Layouts
         /// Toggles the sidebar open/closed state.
         /// </summary>
         private void ToggleSidebar() => _sideBarOpen = !_sideBarOpen;
-        private bool _disposed = false;
         #endregion
 
         #region Lifecycle Methods
@@ -48,6 +61,32 @@ namespace Blazor.RCL.UIComponents.Layouts
             {
                 await _themeService.InitializeThemeAsync();
                 _themeService.OnChange += StateHasChanged;
+
+                // Initialize help document information
+                _helpDocumentInfo = new HelpDocumentInfo
+                {
+                    DocumentLibrary = "Documentation",
+                    Document = $"{_appConfiguration.AppName}Documentation.md"
+                };
+
+                // Try to load from configuration if available
+                try
+                {
+                    var helpDocConfig = await _toolsRepository.GetValueAsync(_appConfiguration.AppName, "HelpDocument");
+                    if (!string.IsNullOrEmpty(helpDocConfig))
+                    {
+                        var configHelpDoc = System.Text.Json.JsonSerializer.Deserialize<HelpDocumentInfo>(helpDocConfig);
+                        if (configHelpDoc != null)
+                        {
+                            _helpDocumentInfo = configHelpDoc;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Could not load help document configuration: ", ex);
+                    // Use default values initialized above
+                }
             }
             catch (Exception ex)
             {

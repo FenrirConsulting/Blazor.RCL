@@ -1,0 +1,26 @@
+::deep .admin-expandable-section {
+    width: 100%;
+}
+
+::deep .section-paper {
+    padding: 1rem;
+}
+
+::deep .section-button {
+    margin-bottom: 0.5rem;
+}
+
+::deep .section-content {
+    padding: 1rem;
+}
+
+::deep .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+
+::deep .mt-4 {
+    margin-top: 1rem;
+} 

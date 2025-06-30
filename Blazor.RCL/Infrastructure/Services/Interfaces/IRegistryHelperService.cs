@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Blazor.RCL.Infrastructure.Services.Interfaces
 {
@@ -21,5 +21,13 @@ namespace Blazor.RCL.Infrastructure.Services.Interfaces
         Dictionary<string, string> GetRegistryValues(IEnumerable<string> propertyNames);
 
         string GetRegistryValue(string keyPath);
+
+        /// <summary>
+        /// Retrieves a password from the registry based on the provided key path.
+        /// Ensures secure handling of sensitive credential information.
+        /// </summary>
+        /// <param name="keyPath">Registry key path where the password is stored.</param>
+        /// <returns>The password as a string, or empty string if not found.</returns>
+        string GetPassword(string keyPath);
     }
 }

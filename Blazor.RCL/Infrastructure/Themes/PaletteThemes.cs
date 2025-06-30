@@ -14,7 +14,7 @@ namespace Blazor.RCL.Infrastructure.Themes
         /// </summary>
         public static MudTheme LightCompanyTheme => new MudTheme()
         {
-            Palette = new PaletteLight()
+            PaletteLight = new PaletteLight()
             {
                 Primary = "#CC0000",         // Company Red
                 Secondary = "#2B88D8",       // Blue
@@ -39,7 +39,7 @@ namespace Blazor.RCL.Infrastructure.Themes
         /// </summary>
         public static MudTheme DarkModernTheme => new MudTheme()
         {
-            Palette = new PaletteLight()
+            PaletteLight = new PaletteLight()
             {
                 Primary = "#569CD6",         // Light Blue
                 Secondary = "#D7BA7D",       // Beige

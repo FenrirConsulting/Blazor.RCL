@@ -1,6 +1,9 @@
 @inherits LayoutComponentBase
+@using Blazor.RCL.UIComponents.Components
+@using MudBlazor
 @attribute [AllowAnonymous]
 
+<div class="main-layout-container">
 @* Loading Indicator *@
 @if (_isLoading)
 {
@@ -8,16 +11,33 @@
 }
 else
 {
-    @* Main Layout *@
-    <MudLayout class="mud-layout-custom">
-        @* Main Content Area *@
-        <MudMainContent class="mud-main-content-custom content-center">
-            @Body
-        </MudMainContent>
-    </MudLayout>
+    @* Help System Wrapper *@
+    <HelpSystem HelpDocument="@_helpDocumentInfo">
+        @* Main Layout *@
+        <MudLayout Class="main-layout">
+            @* Help Button in top-right corner *@
+            <div class="help-button-wrapper">
+                <HelpButton 
+                    Color="Color.Info" 
+                    Icon="@Icons.Material.Rounded.LiveHelp" 
+                    Size="Size.Medium"
+                    Title="View Help Documentation" 
+                    AriaLabel="Open application help and documentation" 
+                    ShowLabel="false"
+                    Class="public-layout-help-button" />
+            </div>
+
+            @* Main Content Area *@
+            <MudMainContent Class="main-content">
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </HelpSystem>
 
     @* MudBlazor Providers *@
     <MudThemeProvider Theme="@(_themeService?.CurrentTheme)" />
     <MudDialogProvider />
     <MudSnackbarProvider />
+    <MudPopoverProvider />
 }
+</div>

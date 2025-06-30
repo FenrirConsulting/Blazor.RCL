@@ -1,0 +1,15 @@
+@using Newtonsoft.Json.Linq
+<div class="json-node">
+    @switch (Value.Type)
+    {
+        case JTokenType.Object:
+            <JsonObject Value="@Value" OnValueChanged="HandleValueChanged" />
+            break;
+        case JTokenType.Array:
+            <JsonArray Value="@Value" OnValueChanged="HandleValueChanged" />
+            break;
+        default:
+            <JsonValue Value="@Value" OnValueChanged="HandleValueChanged" />
+            break;
+    }
+</div> 

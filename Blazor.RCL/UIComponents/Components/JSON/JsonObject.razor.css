@@ -1,0 +1,60 @@
+::deep .json-object {
+    padding: 8px;
+    border-left: 3px solid var(--mud-palette-primary-lighten);
+    margin-left: 4px;
+}
+
+::deep .property-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--mud-palette-background-grey);
+    transition: all 0.2s ease-in-out;
+}
+
+::deep .property-row:hover {
+    background-color: var(--mud-palette-surface);
+    box-shadow: var(--mud-elevation-1);
+}
+
+::deep .property-name {
+    width: 200px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+::deep .property-name::after {
+    content: ':';
+    position: absolute;
+    right: -4px;
+    color: var(--mud-palette-text-secondary);
+}
+
+::deep .property-value {
+    flex-grow: 1;
+    padding-left: 8px;
+}
+
+::deep .property-actions {
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease-in-out;
+}
+
+::deep .property-row:hover .property-actions {
+    opacity: 1;
+}
+
+::deep .add-property {
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+::deep .add-property:hover {
+    background-color: var(--mud-palette-background-grey);
+} 

@@ -2525,7 +2525,7 @@ readers do not read off random characters that represent icons */
 .fa-subscript::before {
   content: "\f12c"; }
 
-.fa-diamond-turn-right::before {
+.fa-dIdentityond-turn-right::before {
   content: "\f5eb"; }
 
 .fa-directions::before {
@@ -3491,7 +3491,7 @@ readers do not read off random characters that represent icons */
 .fa-plant-wilt::before {
   content: "\e5aa"; }
 
-.fa-diamond::before {
+.fa-dIdentityond::before {
   content: "\f219"; }
 
 .fa-face-grin-squint::before {

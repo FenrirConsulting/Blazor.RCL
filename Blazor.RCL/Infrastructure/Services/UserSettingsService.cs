@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Claims;
+using System.Text.Json;
 using Blazor.RCL.Application.Interfaces;
 using Blazor.RCL.Domain.Entities.Configuration;
 using Blazor.RCL.Infrastructure.Services.Interfaces;
@@ -51,7 +52,20 @@ namespace Blazor.RCL.Infrastructure.Services
                     var username = principal.FindFirst(ClaimTypes.Name)?.Value;
                     if (!string.IsNullOrEmpty(username))
                     {
-                        return await GetOrCreateUserSettingsAsync(username);
+                        var settings = await GetOrCreateUserSettingsAsync(username);
+                        
+                        // Check if roles need to be captured (first time or stale)
+                        if (string.IsNullOrEmpty(settings.Roles) ||
+                            !settings.RolesLastUpdated.HasValue ||
+                            settings.RolesLastUpdated.Value < DateTime.UtcNow.AddDays(-1))
+                        {
+                            // Update roles from claims
+                            await UpdateUserRolesFromClaimsAsync(principal);
+                            // Refresh settings from cache after update
+                            settings = await GetOrCreateUserSettingsAsync(username);
+                        }
+                        
+                        return settings;
                     }
                 }
                 return new UserSettings(); // Return default settings for unauthenticated users
@@ -143,6 +157,92 @@ namespace Blazor.RCL.Infrastructure.Services
             var settings = await GetUserSettingsAsync(principal);
             settings.AdditionalSettings = value;
             await UpdateUserSettingsAsync(settings);
+        }
+
+        /// <summary>
+        /// Gets user roles from UserSettings, updating from claims if needed.
+        /// </summary>
+        public async Task<List<string>> GetUserRolesAsync(ClaimsPrincipal principal)
+        {
+            var settings = await GetUserSettingsAsync(principal);
+
+            // Check if we need to update roles (first time or stale)
+            if (string.IsNullOrEmpty(settings.Roles) ||
+                !settings.RolesLastUpdated.HasValue ||
+                settings.RolesLastUpdated.Value < DateTime.UtcNow.AddDays(-1)) // Refresh daily
+            {
+                return await UpdateUserRolesFromClaimsAsync(principal);
+            }
+
+            // Deserialize and return existing roles
+            try
+            {
+                return JsonSerializer.Deserialize<List<string>>(settings.Roles) ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error deserializing roles for user {settings.Username}: {ex.Message}", ex);
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Updates user roles from authentication claims.
+        /// </summary>
+        public async Task<List<string>> UpdateUserRolesFromClaimsAsync(ClaimsPrincipal principal)
+        {
+            // Get username from principal to avoid circular call
+            var username = principal.FindFirst(ClaimTypes.Name)?.Value;
+            if (string.IsNullOrEmpty(username))
+            {
+                return new List<string>();
+            }
+
+            // Get settings directly without going through GetUserSettingsAsync
+            var settings = await GetOrCreateUserSettingsAsync(username);
+
+            // Extract roles from claims
+            var roles = principal.Claims
+                .Where(c => c.Type == ClaimTypes.Role || c.Type == "role" || c.Type == "roles")
+                .Select(c => c.Value)
+                .Distinct()
+                .OrderBy(r => r)
+                .ToList();
+
+            // Update settings
+            settings.Roles = JsonSerializer.Serialize(roles);
+            settings.RolesLastUpdated = DateTime.UtcNow;
+
+            await UpdateUserSettingsAsync(settings);
+
+            _logger.LogInfo($"Updated roles for user {settings.Username}: {string.Join(", ", roles)}",
+                "RolesUpdated",
+                new { Username = settings.Username, RoleCount = roles.Count });
+
+            return roles;
+        }
+
+        /// <summary>
+        /// Gets user roles directly from stored settings without refresh.
+        /// </summary>
+        public async Task<List<string>> GetStoredUserRolesAsync(string username)
+        {
+            var settings = await GetOrCreateUserSettingsAsync(username);
+
+            if (string.IsNullOrEmpty(settings.Roles))
+            {
+                return new List<string>();
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<List<string>>(settings.Roles) ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error deserializing stored roles for user {username}: {ex.Message}", ex);
+                return new List<string>();
+            }
         }
 
         #endregion

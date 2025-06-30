@@ -1,0 +1,222 @@
+/* Consolidated ApplicationProfileAdmin Styles */
+.application-profile-admin-consolidated {
+    background-color: var(--mud-palette-background);
+    min-height: calc(100vh - 100px);
+    position: relative;
+    width: 100%;
+}
+
+/* Loading Progress */
+::deep .loading-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Template Cards */
+.template-card {
+    height: 100%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--mud-palette-primary);
+}
+
+.template-card.add-new-card {
+    border: 2px dashed var(--mud-palette-primary);
+    background-color: var(--mud-palette-background-grey);
+}
+
+.template-card.add-new-card:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.template-card.inactive-template {
+    opacity: 0.7;
+    background-color: var(--mud-palette-background-grey);
+}
+
+/* Text Utilities */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Empty State */
+::deep .empty-state {
+    background: radial-gradient(circle at center, var(--mud-palette-background-grey) 0%, var(--mud-palette-surface) 100%);
+}
+
+/* Dialog Styling (Keep existing) */
+::deep .mud-dialog-content {
+    padding-top: 0;
+}
+
+::deep .mud-dialog .mud-tabs {
+    margin: -24px -24px 0 -24px;
+}
+
+::deep .mud-dialog .mud-tab-panels {
+    padding: 24px;
+}
+
+/* Preview Iframe */
+iframe {
+    background-color: white;
+    border-radius: 4px;
+}
+
+/* Code Display */
+code {
+    background-color: var(--mud-palette-background-grey);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+pre {
+    background-color: var(--mud-palette-background-grey);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    max-height: 500px;
+}
+
+/* Template Variable Table */
+::deep .mud-simple-table {
+    background-color: var(--mud-palette-surface);
+}
+
+::deep .mud-simple-table th {
+    font-weight: 600;
+    background-color: var(--mud-palette-background-grey);
+}
+
+::deep .mud-simple-table td {
+    padding: 8px 16px;
+}
+
+/* Action Buttons */
+::deep .mud-icon-button {
+    transition: all 0.2s ease-in-out;
+}
+
+::deep .mud-icon-button:hover {
+    transform: scale(1.1);
+}
+
+/* Status Badge Colors */
+::deep .admin-status-badge[data-status="Active"] {
+    background-color: var(--mud-palette-success-lighten);
+    color: var(--mud-palette-success-darken);
+}
+
+::deep .admin-status-badge[data-status="Inactive"] {
+    background-color: var(--mud-palette-grey-lighten);
+    color: var(--mud-palette-grey-darken);
+}
+
+/* Template Editor Fields */
+::deep .mud-input-outlined textarea {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+/* Import/Export Styles */
+::deep .mud-file-upload {
+    width: 100%;
+}
+
+.import-results-table {
+    margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.template-card {
+    animation: fadeIn 0.3s ease-out;
+    animation-fill-mode: backwards;
+}
+
+.template-card:nth-child(1) { animation-delay: 0.05s; }
+.template-card:nth-child(2) { animation-delay: 0.1s; }
+.template-card:nth-child(3) { animation-delay: 0.15s; }
+.template-card:nth-child(4) { animation-delay: 0.2s; }
+
+/* Starter Template Cards */
+.starter-template-card {
+    height: 100%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: var(--mud-palette-surface);
+}
+
+.starter-template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--mud-palette-primary);
+}
+
+.starter-template-card:hover ::deep .mud-card-actions {
+    background-color: var(--mud-palette-primary-lighten);
+}
+
+.starter-template-card ::deep .mud-avatar {
+    width: 48px;
+    height: 48px;
+}
+
+.starter-template-card ::deep .mud-card-header-content {
+    overflow: hidden;
+}
+
+.starter-template-card ::deep .mud-card-header-content h6 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive Design */
+@media (max-width: 960px) {
+    .template-card {
+        min-height: 150px;
+    }
+    
+    ::deep .mud-dialog {
+        margin: 0;
+        width: 100vw;
+        max-width: 100vw;
+    }
+    
+    ::deep .mud-tabs {
+        margin: 0;
+    }
+    
+    ::deep .mud-tab-panels {
+        padding: 1rem;
+    }
+    
+    ::deep .mud-stack {
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,19 @@
+::deep .admin-data-table {
+    width: 100%;
+}
+
+::deep .mud-table {
+    background-color: var(--mud-palette-surface);
+}
+
+::deep .mud-table-container {
+    overflow-x: auto;
+}
+
+::deep .mud-table-cell {
+    padding: 8px 16px;
+}
+
+::deep .mud-table-head {
+    background-color: var(--mud-palette-background);
+} 

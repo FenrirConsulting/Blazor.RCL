@@ -1,0 +1,43 @@
+@using Newtonsoft.Json.Linq
+<div class="json-editor">
+    <div class="editor-toolbar">
+        <MudButton StartIcon="@(_showRawJson ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Code)"
+                  Color="Color.Primary"
+                  Size="Size.Small"
+                  Variant="Variant.Text"
+                  OnClick="ToggleView">
+            @(_showRawJson ? "Visual Editor" : "Code Editor")
+        </MudButton>
+    </div>
+    <MudPaper Class="pa-4" Elevation="0">
+        @if (_showRawJson)
+        {
+            <MudTextField @bind-Value="_rawJsonText"
+                         Lines="20"
+                         Variant="Variant.Outlined"
+                         OnBlur="HandleRawJsonChanged" />
+        }
+        else
+        {
+            @if (_parsedJson != null)
+            {
+                @if (_parsedJson.Type == JTokenType.Object)
+                {
+                    <JsonObject Value="@_parsedJson" OnValueChanged="HandleValueChanged" />
+                }
+                else if (_parsedJson.Type == JTokenType.Array)
+                {
+                    <JsonArray Value="@_parsedJson" OnValueChanged="HandleValueChanged" />
+                }
+                else
+                {
+                    <JsonValue Value="@_parsedJson" OnValueChanged="HandleValueChanged" />
+                }
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Error">Invalid JSON</MudAlert>
+            }
+        }
+    </MudPaper>
+</div> 

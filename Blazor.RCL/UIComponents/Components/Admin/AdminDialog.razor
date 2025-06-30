@@ -1,0 +1,16 @@
+<div class="admin-dialog">
+    <MudDialog @bind-Visible="IsVisible" Options="@Options">
+        <TitleContent>
+            <MudText Typo="Typo.h6">@($"{(IsNew ? "Add New" : "Edit")} {Title}")</MudText>
+        </TitleContent>
+        <DialogContent>
+            <div class="dialog-content">
+                @DialogContent
+            </div>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" OnClick="HandleSave">Save</MudButton>
+            <MudButton Color="Color.Secondary" OnClick="HandleCancel">Cancel</MudButton>
+        </DialogActions>
+    </MudDialog>
+</div> 

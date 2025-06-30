@@ -1,0 +1,14 @@
+<div class="admin-filter-bar">
+    <MudPaper Class="d-flex gap-4 pa-4" Elevation="0">
+        @if (ShowSearch)
+        {
+            <MudTextField Value="@SearchText"
+                         ValueChanged="@(async (string s) => await SearchTextChanged.InvokeAsync(s))"
+                         Label="Search"
+                         Adornment="Adornment.Start"
+                         AdornmentIcon="@Icons.Material.Filled.Search"
+                         Class="mt-0" />
+        }
+        @ChildContent
+    </MudPaper>
+</div> 

@@ -1,0 +1,17 @@
+::deep .json-value {
+    width: 100%;
+}
+
+::deep .value-field.value-number input {
+    color: var(--mud-palette-info);
+    font-family: var(--mud-typography-code-family);
+}
+
+::deep .value-field.value-boolean input {
+    color: var(--mud-palette-success);
+    font-family: var(--mud-typography-code-family);
+}
+
+::deep .value-field.value-string input {
+    color: var(--mud-palette-primary);
+} 

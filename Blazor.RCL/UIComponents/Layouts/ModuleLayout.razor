@@ -1,5 +1,7 @@
 @inherits LayoutComponentBase
+@using Blazor.RCL.UIComponents.Components
 
+<div class="main-layout-container">
 @* Loading Indicator *@
 @if (_isLoading)
 {
@@ -7,19 +9,24 @@
 }
 else
 {
-    @* Main Layout *@
-    <MudLayout Class="d-flex flex-column" Style="height: 100vh;">
-        @* Menu Bar *@
-        <MenuBar />
+    @* Help System Wrapper *@
+    <HelpSystem HelpDocument="@_helpDocumentInfo">
+        @* Main Layout *@
+        <MudLayout Class="main-layout">
+            @* Menu Bar *@
+            <MenuBar />
 
-        @* Main Content Area *@
-        <MudMainContent Class="flex-grow-1 d-flex flex-column mt-1" Style="overflow:hidden;">
-            @Body
-        </MudMainContent>
-    </MudLayout>
+            @* Main Content Area *@
+            <MudMainContent Class="main-content">
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </HelpSystem>
 
     @* MudBlazor Providers *@
     <MudThemeProvider Theme="@(_themeService?.CurrentTheme)" />
     <MudDialogProvider />
     <MudSnackbarProvider />
+    <MudPopoverProvider />
 }
+</div>

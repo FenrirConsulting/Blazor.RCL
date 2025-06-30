@@ -1,0 +1,42 @@
+/* Preview iframe styling */
+::deep .preview-iframe {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 4px;
+}
+
+/* Text preview styling */
+::deep .text-preview {
+    white-space: pre-wrap;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    height: 500px;
+    overflow-y: auto;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+/* Loading state styling */
+::deep .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 16px;
+}
+
+/* Dialog content improvements */
+::deep .mud-dialog-content {
+    padding: 24px;
+}
+
+/* Subject field styling */
+::deep .subject-field {
+    margin-bottom: 16px;
+}

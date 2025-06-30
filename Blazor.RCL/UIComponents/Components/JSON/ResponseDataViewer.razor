@@ -1,0 +1,131 @@
+@namespace Blazor.RCL.UIComponents.Components.JSON
+
+<div>
+<MudDialog>
+    <DialogContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Style="max-height: 600px; overflow-y: auto; padding: 0;">
+            <MudPaper Elevation="0" Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Color="@GetStatusColor()" Class="mb-4">
+                            @(AccessSubType) Response - @RequestStatusDesc
+                        </MudText>
+                    </MudItem>
+
+                    <MudItem xs="12" Class="mb-4">
+                        <MudCard Elevation="2" Class="metadata-card">
+                            <MudCardHeader Class="metadata-header">
+                                <CardHeaderContent>
+                                    <div class="d-flex align-center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2 metadata-icon" Color="Color.Primary" />
+                                        <MudText Typo="Typo.h6">Request Information</MudText>
+                                    </div>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudTooltip Text="Essential information about this response request">
+                                        <MudIcon Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Default" Size="Size.Small" />
+                                    </MudTooltip>
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                            <MudDivider />
+                            <MudCardContent Class="metadata-content">
+                                <div class="metadata-grid">
+                                    <div class="metadata-field-container">
+                                        <div class="metadata-field">
+                                            <div class="metadata-label">Source ID</div>
+                                            <div class="metadata-value">@SourceId</div>
+                                        </div>
+                                    </div>
+                                    <div class="metadata-field-container">
+                                        <div class="metadata-field">
+                                            <div class="metadata-label">Request Item</div>
+                                            <div class="metadata-value">@RequestItem</div>
+                                        </div>
+                                    </div>
+                                    <div class="metadata-field-container">
+                                        <div class="metadata-field">
+                                            <div class="metadata-label">Access Type</div>
+                                            <div class="metadata-value">@AccessType</div>
+                                        </div>
+                                    </div>
+                                    <div class="metadata-field-container">
+                                        <div class="metadata-field">
+                                            <div class="metadata-label">Access Subtype</div>
+                                            <div class="metadata-value">@AccessSubType</div>
+                                        </div>
+                                    </div>
+                                    <div class="metadata-field-container wide-field">
+                                        <div class="metadata-field">
+                                            <div class="metadata-label">Status Comments</div>
+                                            <div class="metadata-value">@StatusComments</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+
+                    @if (TaskDetails.Any())
+                    {
+                        <MudItem xs="12" Class="mb-4">
+                            <MudCard Elevation="2" Class="metadata-card array-card">
+                                <MudCardHeader Class="metadata-header">
+                                    <CardHeaderContent>
+                                        <div class="d-flex align-center">
+                                            <MudIcon Icon="@Icons.Material.Filled.Assignment" Class="mr-2 metadata-icon" Color="Color.Primary" />
+                                            <MudText Typo="Typo.h6">Task Details</MudText>
+                                        </div>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudTooltip Text="Details of tasks executed for this request">
+                                            <MudIcon Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Default" Size="Size.Small" />
+                                        </MudTooltip>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudDivider />
+                                <MudCardContent Class="metadata-content">
+                                    <div class="array-table-container">
+                                        <MudTable Items="@TaskDetails" Hover="true" Striped="false" Dense="true" Class="array-table" 
+                                                  Elevation="0" HeaderClass="array-table-header" FixedHeader="true">
+                                            <HeaderContent>
+                                                <MudTh>Task ID</MudTh>
+                                                <MudTh>Task Name</MudTh>
+                                                <MudTh>Status</MudTh>
+                                                <MudTh>Error Description</MudTh>
+                                            </HeaderContent>
+                                            <RowTemplate>
+                                                <MudTd>@(context.TaskId > 0 ? context.TaskId.ToString() : "-")</MudTd>
+                                                <MudTd>@(string.IsNullOrEmpty(context.TaskName) ? "-" : context.TaskName)</MudTd>
+                                                <MudTd>
+                                                    <MudChip T="string" Color="@GetTaskStatusColor(context.TaskStatus)" Size="Size.Small">
+                                                        @(string.IsNullOrEmpty(context.TaskStatus) ? "Unknown" : context.TaskStatus)
+                                                    </MudChip>
+                                                </MudTd>
+                                                <MudTd>@(string.IsNullOrEmpty(context.ErrorDesc) ? "-" : context.ErrorDesc)</MudTd>
+                                            </RowTemplate>
+                                        </MudTable>
+                                    </div>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                    }
+
+                    <MudItem xs="12" Class="mt-4">
+                        <MudExpansionPanels Class="json-expansion-panel">
+                            <MudExpansionPanel @bind-IsExpanded="IsOriginalJsonVisible" 
+                                             Text="@(IsOriginalJsonVisible ? "Hide Original JSON" : "Show Original JSON")"
+                                             Icon="@Icons.Material.Filled.Code"
+                                             Class="json-panel">
+                                <pre class="json-content">@OriginalJson</pre>
+                            </MudExpansionPanel>
+                        </MudExpansionPanels>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+</div>

@@ -1,0 +1,29 @@
+@typeparam TItem
+<div class="admin-expandable-section">
+    <MudPaper Elevation="3" Class="@($"section-paper {(FirstSection ? "" : "mt-4")}")">
+        <MudButton OnClick="HandleExpand"
+                   Color="Color.Primary"
+                   EndIcon="@(IsExpanded ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)"
+                   Class="section-button">
+            @Title
+        </MudButton>
+        @if (IsExpanded)
+        {
+            <MudPaper Elevation="3" Class="section-content">
+                <AdminActionButton Text="@AddButtonText"
+                                 Icon="@Icons.Material.Filled.Add"
+                                 OnClick="@OnAdd" />
+                @if (Items == null)
+                {
+                    <div class="loading-container">
+                        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                    </div>
+                }
+                else
+                {
+                    @ChildContent
+                }
+            </MudPaper>
+        }
+    </MudPaper>
+</div> 

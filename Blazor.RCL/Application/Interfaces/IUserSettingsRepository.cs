@@ -27,5 +27,19 @@ namespace Blazor.RCL.Application.Interfaces
         /// </summary>
         /// <param name="userSettings">The user settings to update.</param>
         Task UpdateUserSettingsAsync(UserSettings userSettings);
+
+        /// <summary>
+        /// Gets user settings by username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns>The user settings if found; otherwise, null.</returns>
+        Task<UserSettings?> GetByUsernameAsync(string username);
+
+        /// <summary>
+        /// Gets all usernames that have a specific role.
+        /// </summary>
+        /// <param name="role">The role to search for.</param>
+        /// <returns>A list of usernames that have the specified role.</returns>
+        Task<IEnumerable<string>> GetUsernamesWithRoleAsync(string role);
     }
 }

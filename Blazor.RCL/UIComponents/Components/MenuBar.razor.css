@@ -1,2 +1,34 @@
-﻿::deep body {
+﻿::deep .nav-link {
+    text-decoration: none;
+    padding-top: 3px;
+}
+
+::deep .custom-nav-button {
+    background-color: var(--mud-palette-appbar-background);
+    color: var(--mud-palette-white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+    position: relative;
+    top: 0;
+}
+
+::deep .nav-link:hover .custom-nav-button {
+    background-color: var(--mud-palette-primary-lighten);
+    color: var(--mud-palette-white);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+}
+
+::deep .nav-link.active .custom-nav-button {
+    background-color: var(--mud-palette-primary);
+    color: var(--mud-palette-white);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+::deep .custom-appbar .mud-stack {
+    align-items: center;
+    min-height: var(--mud-appbar-height);
 }

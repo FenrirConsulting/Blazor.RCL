@@ -40,12 +40,14 @@ namespace Blazor.RCL.Application.Interfaces
         /// Sets a tool configuration asynchronously.
         /// </summary>
         /// <param name="toolsConfiguration">The tool configuration to set.</param>
-        Task SetAsync(ToolsConfiguration toolsConfiguration);
+        /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
+        Task SetAsync(ToolsConfiguration toolsConfiguration, CancellationToken token = default);
 
         /// <summary>
         /// Removes a tool configuration asynchronously.
         /// </summary>
         /// <param name="config">The tool configuration to remove.</param>
-        Task RemoveAsync(ToolsConfiguration config);
+        /// <param name="token">Optional. A cancellation token to cancel the operation.</param>
+        Task RemoveAsync(ToolsConfiguration config, CancellationToken token = default);
     }
 }

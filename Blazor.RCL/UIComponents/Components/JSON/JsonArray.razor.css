@@ -1,0 +1,56 @@
+::deep .json-array {
+    padding: 8px;
+    border-left: 3px solid var(--mud-palette-secondary-lighten);
+    margin-left: 4px;
+}
+
+::deep .array-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--mud-palette-background-grey);
+    transition: all 0.2s ease-in-out;
+}
+
+::deep .array-item:hover {
+    background-color: var(--mud-palette-surface);
+    box-shadow: var(--mud-elevation-1);
+}
+
+::deep .item-index {
+    color: var(--mud-palette-text-secondary);
+    padding: 4px;
+    min-width: 40px;
+    font-family: var(--mud-typography-code-family);
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+::deep .item-value {
+    flex-grow: 1;
+    padding-left: 8px;
+}
+
+::deep .item-actions {
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease-in-out;
+}
+
+::deep .array-item:hover .item-actions {
+    opacity: 1;
+}
+
+::deep .add-item {
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+::deep .add-item:hover {
+    background-color: var(--mud-palette-background-grey);
+} 

@@ -1,7 +1,8 @@
-﻿using Blazor.RCL.Domain.Entities.AzureAD;
+using Blazor.RCL.Domain.Entities.AzureAD;
 using Blazor.RCL.Infrastructure.Services.Interfaces;
 using Blazor.RCL.NLog.LogService.Interface;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace Blazor.RCL.Infrastructure.Services
 {
@@ -31,18 +32,43 @@ namespace Blazor.RCL.Infrastructure.Services
             {
                 _options = new AzureAdOptions();
                 _aKeyLessOptions = new AKeyLessOptions();
+                
+                // Bind AzureAd section
                 configuration.GetSection("AzureAd").Bind(_options);
-                configuration.GetSection("AKeyLess").Bind(_aKeyLessOptions);
-
+                
                 // Get the ServicePrincipalRegistryKey from the registry
-                _options.ServicePrincipalRegistryKey = registryHelper.GetRegistryValue(_options.ServicePrincipalRegistryKey!);
-                _aKeyLessOptions.ACM1 = registryHelper.GetRegistryValue(_aKeyLessOptions.ACM1Path!);
-                _aKeyLessOptions.ACM2 = registryHelper.GetRegistryValue(_aKeyLessOptions.ACM2Path!);
+                if (!string.IsNullOrEmpty(_options.ServicePrincipalRegistryKey))
+                {
+                    _options.ServicePrincipalRegistryKey = registryHelper.GetRegistryValue(_options.ServicePrincipalRegistryKey!);
+                }
+                
+                // Try to bind AKeyLess section if it exists
+                var akeylessSection = configuration.GetSection("AKeyLess");
+                if (akeylessSection.Exists())
+                {
+                    akeylessSection.Bind(_aKeyLessOptions);
+                    
+                    // Ensure Secrets and SecretMappings are initialized
+                    if (_aKeyLessOptions.Secrets == null)
+                    {
+                        _aKeyLessOptions.Secrets = new AKeyLessSecrets();
+                    }
+                    
+                    if (_aKeyLessOptions.Secrets.SecretMappings == null)
+                    {
+                        _aKeyLessOptions.Secrets.SecretMappings = new Dictionary<string, string>();
+                    }
+                }
+                else
+                {
+                    _logger.LogWarn("AKeyLess section not found in configuration");
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred while initializing AzureAdOptionsService", ex);
-                throw;
+                // Don't throw the exception to prevent app startup failure
+                // Just log the error and continue with default values
             }
         }
         #endregion

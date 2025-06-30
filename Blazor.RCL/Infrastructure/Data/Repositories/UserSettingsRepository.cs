@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Blazor.RCL.Application.Interfaces;
 using Blazor.RCL.Domain.Entities.Configuration;
@@ -100,6 +103,63 @@ namespace Blazor.RCL.Infrastructure.Data.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"Error occurred while updating user settings for username: {userSettings.Username}", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets user settings by username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns>The user settings if found; otherwise, null.</returns>
+        public async Task<UserSettings?> GetByUsernameAsync(string username)
+        {
+            return await GetUserSettingsAsync(username);
+        }
+
+        /// <summary>
+        /// Gets all usernames that have a specific role.
+        /// </summary>
+        /// <param name="role">The role to search for.</param>
+        /// <returns>A list of usernames that have the specified role.</returns>
+        public async Task<IEnumerable<string>> GetUsernamesWithRoleAsync(string role)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                
+                // Query all users with non-null roles
+                var usersWithRoles = await context.UserSettings
+                    .Where(u => !string.IsNullOrEmpty(u.Roles))
+                    .Select(u => new { u.Username, u.Roles })
+                    .ToListAsync();
+                
+                // Filter in memory to find users with the specific role
+                var usernamesWithRole = new List<string>();
+                foreach (var user in usersWithRoles)
+                {
+                    try
+                    {
+                        // Deserialize the roles JSON array
+                        var roles = JsonSerializer.Deserialize<List<string>>(user.Roles);
+                        if (roles != null && roles.Contains(role, StringComparer.OrdinalIgnoreCase))
+                        {
+                            usernamesWithRole.Add(user.Username);
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Skip users with invalid JSON in roles field
+                        _logger.LogMessage($"Invalid JSON in Roles field for user: {user.Username}");
+                    }
+                }
+                
+                _logger.LogMessage($"Found {usernamesWithRole.Count} users with role: {role}");
+                return usernamesWithRole;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error occurred while getting usernames with role: {role}", ex);
                 throw;
             }
         }

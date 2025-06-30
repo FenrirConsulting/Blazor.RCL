@@ -1,0 +1,29 @@
+@using Newtonsoft.Json.Linq
+<div class="json-array">
+    <div class="array-items">
+        @for (var i = 0; i < ArrayItems.Count; i++)
+        {
+            var index = i;
+            <div class="array-item">
+                <div class="item-index">[@index]</div>
+                <div class="item-value">
+                    <JsonNode Value="@ArrayItems[index]" 
+                             OnValueChanged="@((v) => HandleItemValueChanged(index, v))" />
+                </div>
+                <div class="item-actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                 Size="Size.Small"
+                                 Color="Color.Error"
+                                 OnClick="@(() => RemoveItem(index))" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="add-item">
+        <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Size="Size.Small">
+            <MudMenuItem OnClick="@(() => AddItem(JTokenType.String))">Add String</MudMenuItem>
+            <MudMenuItem OnClick="@(() => AddItem(JTokenType.Object))">Add Object</MudMenuItem>
+            <MudMenuItem OnClick="@(() => AddItem(JTokenType.Array))">Add Array</MudMenuItem>
+        </MudMenu>
+    </div>
+</div> 

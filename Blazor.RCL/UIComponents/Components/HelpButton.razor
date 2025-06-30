@@ -1,0 +1,30 @@
+@if (HelpSystem?.IsHelpAvailable == true)
+{
+    <div class="help-button-container">
+        @if (ShowLabel)
+        {
+            <div class="d-flex align-center">
+                <MudIconButton 
+                    Icon="@Icon" 
+                    Color="@Color" 
+                    Size="@Size" 
+                    OnClick="ToggleHelpPanel" 
+                    Class="@($"help-icon-button {Class}")" 
+                    Title="@Title" 
+                    aria-label="@AriaLabel" />
+                <MudText Typo="Typo.caption" Color="Color.Default" Class="help-button-label ml-1">@Label</MudText>
+            </div>
+        }
+        else
+        {
+            <MudIconButton 
+                Icon="@Icon" 
+                Color="@Color" 
+                Size="@Size" 
+                OnClick="ToggleHelpPanel" 
+                Class="@($"help-icon-button {Class}")" 
+                Title="@Title" 
+                aria-label="@AriaLabel" />
+        }
+    </div>
+}

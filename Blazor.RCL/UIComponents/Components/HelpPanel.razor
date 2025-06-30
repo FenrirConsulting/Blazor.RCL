@@ -1,0 +1,45 @@
+<div class="help-panel-container @(IsOpen ? "active" : "")" @onclick="@(async () => await CloseDrawer())">
+    @if (IsHelpAvailable)
+    {
+        <div class="help-panel @(IsOpen ? "open" : "")" @onclick:stopPropagation>
+            <MudPaper Elevation="3" Class="pa-3 d-flex flex-column help-panel-content mud-height-full">
+                <div class="d-flex justify-space-between align-center mb-4">
+                    <MudText Typo="Typo.h5">Help</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Close" 
+                                  Color="Color.Default" 
+                                  OnClick="@(async () => await CloseDrawer())" />
+                </div>
+
+                @if (_isLoading)
+                {
+                    <div class="d-flex flex-column align-center justify-center flex-grow-1">
+                        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+                        <MudText Class="mt-4" Typo="Typo.subtitle1">Loading documentation...</MudText>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(_markdownContent))
+                {
+                    <div class="document-wrapper mud-height-full">
+                        <div class="document-content">
+                            <MudMarkdown Value="@_markdownContent" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column align-center justify-center flex-grow-1">
+                        <MudAlert Severity="Severity.Error" Class="my-2" Dense="false">
+                            <MudText Typo="Typo.body1">Unable to load the help document.</MudText>
+                        </MudAlert>
+                        <MudButton Variant="Variant.Filled" 
+                                  Color="Color.Primary" 
+                                  Class="mt-4" 
+                                  OnClick="@(async () => await LoadHelpDocument())">
+                            Retry
+                        </MudButton>
+                    </div>
+                }
+            </MudPaper>
+        </div>
+    }
+</div>
